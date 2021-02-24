@@ -51,14 +51,44 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown'):
+                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,0,0,0]):
+        # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
 
+
         # TODO
+        # is there always a chance of delay assumed by default?
         self.delay_time = self.random.randrange(0, 10)
-        # print(self.delay_time)
+
+        # pop_breakdown = self.condition list
+        # somehow include props as another attribute (?)
+
+        if self.condition == 'A':
+            self.break_down = break_down_prob[0]
+        elif self.condition == 'B':
+            self.break_down = break_down_prob[1]
+        elif self.condition == 'C':
+            self.break_down = break_down_prob[2]
+        elif self.break_down == 'D':
+            self.break_down = break_down_prob[3]
+
+        # if bridge breaks down (with defined probability)
+        if self.random.randint(1,100) <= self.break_down:
+        # vehicle has unique chance of delay time in ranges according to bridge length
+            if self.length > 200:
+                self.delay_time = self.random.triangular(60,120,240)
+            elif 50 < self.length < 200:
+                self.delay_time = self.random.uniform(45,90)
+            elif 10 < self.length < 50:
+                self.delay_time = self.random.uniform(15,60)
+            else:
+                self.delay_time = self.random.uniform(10,20)
+        #else:
+
+    # print(self.delay_time)
+
 
     # TODO
     def get_delay_time(self):
