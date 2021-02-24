@@ -1,7 +1,7 @@
 from mesa import Agent
 from enum import Enum
 
-This is a test from Ibrahim
+This is a test
 
 # ---------------------------------------------------------------
 class Infra(Agent):
