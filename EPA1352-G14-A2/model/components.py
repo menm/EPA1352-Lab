@@ -51,7 +51,7 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,0,0,0]):
+                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,5,10,20]):
         # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
 
@@ -60,10 +60,7 @@ class Bridge(Infra):
 
         # TODO
         # is there always a chance of delay assumed by default?
-        self.delay_time = self.random.randrange(0, 10)
-
-        # pop_breakdown = self.condition list
-        # somehow include props as another attribute (?)
+        # self.delay_time = self.random.randrange(0, 10)
 
         if self.condition == 'A':
             self.break_down = break_down_prob[0]
@@ -71,7 +68,8 @@ class Bridge(Infra):
             self.break_down = break_down_prob[1]
         elif self.condition == 'C':
             self.break_down = break_down_prob[2]
-        elif self.break_down == 'D':
+        else:
+            # self.break_down == 'D'
             self.break_down = break_down_prob[3]
 
         # if bridge breaks down (with defined probability)
@@ -88,7 +86,7 @@ class Bridge(Infra):
         else:
             self.delay_time = 0
 
-    # print(self.delay_time)
+        print(self.delay_time)
 
 
     # TODO
@@ -169,6 +167,7 @@ class Source(Infra):
         except Exception as e:
             print("Oops!", e.__class__, "occurred.")
 
+        #print("Vehicles: ", truck_counter)
 
 # ---------------------------------------------------------------
 class SourceSink(Source, Sink):

@@ -1,4 +1,4 @@
-road,lrp,model_type,name,lat,lon,length,condition
+road,id,model_type,name,lat,lon,length,condition
 N1,LRPS,source,Start of Road  after Jatrabari Flyover infront of filling station.,23.7060278,90.443333,814.0,
 N1,LRPSa,link,Box Culvert,23.7029167,90.4504167,8.000000000000007,
 N1,LRPSb,link,Intersection with Z1101,23.702777800000003,90.45047220000001,177.99999999999994,

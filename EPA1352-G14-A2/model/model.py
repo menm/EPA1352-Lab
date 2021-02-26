@@ -73,7 +73,7 @@ class BangladeshModel(Model):
         Warning: the labels are the same as the csv column labels
         """
 
-        df = pd.read_csv('../data/demo-2.csv') # reads in file and creates very basic simulation
+        df = pd.read_csv('../data/N1_infrastructure.csv') # reads in file and creates very basic simulation
 
         # a list of names of roads to be generated
         roads = ['N1']
@@ -89,7 +89,8 @@ class BangladeshModel(Model):
             # be careful with the sorting
             # better remove sorting by id
             # Select all the objects on a particular road
-            df_objects_on_road = df[df['road'] == road].sort_values(by=['id'])
+            #df_objects_on_road = df[df['road'] == road].sort_values(by=['id'])
+            df_objects_on_road = df[df['road'] == road]
 
             if not df_objects_on_road.empty:
                 df_objects_all.append(df_objects_on_road)
