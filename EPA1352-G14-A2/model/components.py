@@ -77,15 +77,16 @@ class Bridge(Infra):
         # if bridge breaks down (with defined probability)
         if self.random.randint(1,100) <= self.break_down:
         # vehicle has unique chance of delay time in ranges according to bridge length
-            if self.length > 200:
+            if self.length >= 200:
                 self.delay_time = self.random.triangular(60,120,240)
-            elif 50 < self.length < 200:
+            elif 50 <= self.length < 200:
                 self.delay_time = self.random.uniform(45,90)
-            elif 10 < self.length < 50:
+            elif 10 <= self.length < 50:
                 self.delay_time = self.random.uniform(15,60)
             else:
                 self.delay_time = self.random.uniform(10,20)
-        #else:
+        else:
+            self.delay_time = 0
 
     # print(self.delay_time)
 
