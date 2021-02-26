@@ -1,6 +1,7 @@
 from mesa import Agent
 from enum import Enum
 
+
 # ---------------------------------------------------------------
 class Infra(Agent):
     """
