@@ -37,7 +37,7 @@ class Infra(Agent):
 # ---------------------------------------------------------------
 class Bridge(Infra):
     """
-    Creates delay time
+    Creates delay time according to bridge condition and length
 
     Attributes
     __________
@@ -48,6 +48,9 @@ class Bridge(Infra):
         the delay (in ticks) caused by this bridge
     ...
 
+    Specify break_down_prob as parameter
+    Where percentage of category bridges breaking down is in order [A, B, C, D]
+
     """
 
     def __init__(self, unique_id, model, length=0,
@@ -57,11 +60,7 @@ class Bridge(Infra):
 
         self.condition = condition
 
-
-        # TODO
-        # is there always a chance of delay assumed by default?
-        # self.delay_time = self.random.randrange(0, 10)
-
+        # assign probability of breaking down to condition of bridge
         if self.condition == 'A':
             self.break_down = break_down_prob[0]
         elif self.condition == 'B':
@@ -72,7 +71,7 @@ class Bridge(Infra):
             # self.break_down == 'D'
             self.break_down = break_down_prob[3]
 
-        # if bridge breaks down (with defined probability)
+        # bridge breaks down with defined probability
         if self.random.randint(1,100) <= self.break_down:
         # vehicle has unique chance of delay time in ranges according to bridge length
             if self.length >= 200:
@@ -83,10 +82,11 @@ class Bridge(Infra):
                 self.delay_time = self.random.uniform(15,60)
             else:
                 self.delay_time = self.random.uniform(10,20)
+        # no delay if no encounter with a bridge
         else:
             self.delay_time = 0
 
-        print(self.delay_time)
+        #print(self.delay_time)
 
 
     # TODO
@@ -167,7 +167,6 @@ class Source(Infra):
         except Exception as e:
             print("Oops!", e.__class__, "occurred.")
 
-        #print("Vehicles: ", truck_counter)
 
 # ---------------------------------------------------------------
 class SourceSink(Source, Sink):
@@ -246,6 +245,7 @@ class Vehicle(Agent):
         self.waited_at = None
         self.removed_at_step = None
 
+    # Useful for data analysis #
     def __str__(self):
         return "Vehicle" + str(self.unique_id) + \
                " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
