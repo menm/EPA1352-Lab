@@ -54,7 +54,7 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,5,10,20]):
+                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,0,0,0]):
         # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
 

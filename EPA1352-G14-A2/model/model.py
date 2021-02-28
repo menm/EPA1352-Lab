@@ -2,7 +2,7 @@ from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
 from mesa.datacollection import DataCollector
-from components import Source, Sink, SourceSink, Bridge, Link
+from components import Source, Sink, SourceSink, Bridge, Link, Vehicle
 import pandas as pd
 from collections import defaultdict
 
@@ -24,18 +24,28 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     y_min = lat_max + lat_edge
     return y_min, y_max, x_min, x_max
 
-def calculate_delay_time(model):
-    total_delay_time = 0
+#CHANGED
+def calculate_avg_waiting_time(model):
+    total_waiting_time = 0
     total_vehicle_count = 0
     for agent in model.schedule.agents:
-        if isinstance(agent,Source):
-            total_vehicle_count += agent.vehicle_count
-        if isinstance(agent,Bridge):
-            total_delay_time += agent.delay_time
-    average_total_delay_time = total_delay_time/total_vehicle_count
-    print(total_vehicle_count)
-    return average_total_delay_time
+        if isinstance(agent, Vehicle):
+            total_vehicle_count += 1
+            total_waiting_time += agent.waiting_time
+    average_total_waiting_time = total_waiting_time/total_vehicle_count
+    return average_total_waiting_time
 
+def calculate_avg_driving_time(model):
+    total_driving_time = 0
+    total_removed_vehicle_count = 1
+    for agent in model.schedule.agents:
+        if isinstance(agent,Vehicle):
+            if type(agent.removed_at_step) == int:
+                total_removed_vehicle_count += 1
+                total_driving_time += (agent.removed_at_step - agent.generated_at_step)
+    average_total_driving_time = total_driving_time /total_removed_vehicle_count
+    print(total_removed_vehicle_count)
+    return average_total_driving_time
 
 # ---------------------------------------------------------------
 class BangladeshModel(Model):
@@ -67,17 +77,20 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
-
+    # CHANGED
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob = [0,0,0,0]):
         self.schedule = BaseScheduler(self) #calls agent step by step in same order
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
         self.sources = []
         self.sinks = []
+        self.break_down_prob = break_down_prob
 
         self.generate_model()
-        self.datacollector = DataCollector(model_reporters= {'average_total_delay_time': calculate_delay_time} )
+        # CHANGED
+        self.datacollector = DataCollector(model_reporters= ({'average_total_waiting_time': calculate_avg_waiting_time,
+                                                             'average_total_driving_time': calculate_avg_driving_time}))
 
     def generate_model(self):
         """
@@ -150,7 +163,8 @@ class BangladeshModel(Model):
                     self.sources.append(agent.unique_id)
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
-                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'])
+                    #CHANGED
+                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'], self.break_down_prob)
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
 
