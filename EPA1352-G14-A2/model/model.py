@@ -36,6 +36,7 @@ def calculate_delay_time(model):
     print(total_vehicle_count)
     return average_total_delay_time
 
+
 # ---------------------------------------------------------------
 class BangladeshModel(Model):
     """
