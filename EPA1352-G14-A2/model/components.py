@@ -62,7 +62,9 @@ class Bridge(Infra):
 
         # assign probability of breaking down to condition of bridge
         if self.condition == 'A':
+            print("break_down_prob[0] is = ", break_down_prob)
             self.break_down = break_down_prob[0]
+            print("break_down_prob[0] is = ", break_down_prob[0])
         elif self.condition == 'B':
             self.break_down = break_down_prob[1]
         elif self.condition == 'C':
