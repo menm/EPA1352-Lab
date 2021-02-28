@@ -26,6 +26,11 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
 
 #CHANGED
 def calculate_avg_waiting_time(model):
+    """
+    calculate average waiting time of a single vehicle in ticks (=minutes)
+    averaged over all vehicles
+
+    """
     total_waiting_time = 0
     total_vehicle_count = 0
     for agent in model.schedule.agents:
@@ -36,11 +41,19 @@ def calculate_avg_waiting_time(model):
     return average_total_waiting_time
 
 def calculate_avg_driving_time(model):
+    """
+    calculate average driving time of a single vehicle in ticks (=minutes)
+    averaged over all vehicles
+
+    """
     total_driving_time = 0
     total_removed_vehicle_count = 1
     for agent in model.schedule.agents:
         if isinstance(agent,Vehicle):
-            if type(agent.removed_at_step) == int:
+            # if type is not None
+            print("instances of vehicles")
+            if agent.removed_at_step:
+                print("increment removed vehicles")
                 total_removed_vehicle_count += 1
                 total_driving_time += (agent.removed_at_step - agent.generated_at_step)
     average_total_driving_time = total_driving_time /total_removed_vehicle_count
@@ -164,7 +177,7 @@ class BangladeshModel(Model):
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
                     #CHANGED
-                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'], self.break_down_prob)
+                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'])
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
 

@@ -29,10 +29,9 @@ for i in range(run_length):
 #CHANGED
 print("HELLO")
 fixed_params = {}
-variable_params = {'break_down_prob': [0,0,5,10]}
+variable_params = {'break_down_prob': [[10,0,5,10]]}
 
-batch_run = BatchRunner(BangladeshModel, variable_params, fixed_params,
-                        iterations = 1, max_steps=400,
+batch_run = BatchRunner(BangladeshModel, variable_params, fixed_params, iterations = 1, max_steps=400,
                         model_reporters={'average_total_driving_time': calculate_avg_driving_time})
 print("sup")
 
