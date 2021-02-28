@@ -1,4 +1,5 @@
 from model import BangladeshModel
+import matplotlib.pyplot as plt
 
 """
     Run simulation
@@ -11,7 +12,7 @@ from model import BangladeshModel
 # run_length = 5 * 24 * 60
 
 # run time 1000 ticks
-run_length = 1000
+run_length = 200
 
 seed = 1234567
 
@@ -23,3 +24,7 @@ print("SEED " + str(sim_model._seed))
 # One run with given steps
 for i in range(run_length):
     sim_model.step()
+
+sim_model.datacollector.get_model_vars_dataframe().plot()
+plt.grid(True)
+plt.show()

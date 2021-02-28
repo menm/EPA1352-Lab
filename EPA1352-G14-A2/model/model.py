@@ -1,10 +1,10 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
+from mesa.datacollection import DataCollector
 from components import Source, Sink, SourceSink, Bridge, Link
 import pandas as pd
 from collections import defaultdict
-
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -23,6 +23,18 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     x_min = lon_min - lon_edge
     y_min = lat_max + lat_edge
     return y_min, y_max, x_min, x_max
+
+def calculate_delay_time(model):
+    total_delay_time = 0
+    total_vehicle_count = 0
+    for agent in model.schedule.agents:
+        if isinstance(agent,Source):
+            total_vehicle_count += agent.vehicle_count
+        if isinstance(agent,Bridge):
+            total_delay_time += agent.delay_time
+    average_total_delay_time = total_delay_time/total_vehicle_count
+    print(total_vehicle_count)
+    return average_total_delay_time
 
 
 # ---------------------------------------------------------------
@@ -65,6 +77,7 @@ class BangladeshModel(Model):
         self.sinks = []
 
         self.generate_model()
+        self.datacollector = DataCollector(model_reporters= {'average_total_delay_time': calculate_delay_time} )
 
     def generate_model(self):
         """
@@ -164,5 +177,6 @@ class BangladeshModel(Model):
         Advance the simulation by one step.
         """
         self.schedule.step()
+        self.datacollector.collect(self)
 
 # EOF -----------------------------------------------------------
