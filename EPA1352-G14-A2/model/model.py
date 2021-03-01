@@ -55,7 +55,7 @@ def calculate_avg_driving_time(model):
     #             model.total_driving_time += (agent.removed_at_step - agent.generated_at_step)
 
     if model.total_removed_vehicles != 0:
-        print(model.total_driving_time , model.total_removed_vehicles)
+        print(model.total_driving_time, model.total_removed_vehicles)
 
         average_total_driving_time = model.total_driving_time / model.total_removed_vehicles
         return average_total_driving_time
@@ -166,7 +166,6 @@ class BangladeshModel(Model):
 
         for df in df_objects_all:
             for _, row in df.iterrows():    # index, row in ...
-
                 # create agents according to model_type
                 model_type = row['model_type']
                 agent = None
