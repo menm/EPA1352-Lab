@@ -59,7 +59,7 @@ class Bridge(Infra):
                  break_down_prob_C=0, break_down_prob_D=0):
         # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
-
+        print(break_down_prob_A,break_down_prob_B,break_down_prob_C,break_down_prob_D)
         self.condition = condition
         # assign probability of breaking down to condition of bridge
         if self.condition == 'A':
@@ -115,8 +115,8 @@ class Sink(Infra):
     vehicle_removed_toggle = False
 
     def remove(self, vehicle):
-        self.model.total_driving_time += vehicle.removed_at_step - vehicle.generated_at_step
-        self.model.total_removed_vehicles += 1
+        # self.model.total_driving_time += vehicle.removed_at_step - vehicle.generated_at_step
+        # self.model.total_removed_vehicles += 1
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
         print(str(self) + ' REMOVE ' + str(vehicle))
