@@ -7,6 +7,7 @@ from model import *
     Print output at terminal
 """
 #test for push
+#pls?
 # ---------------------------------------------------------------
 
 # run time 5 x 24 hours; 1 tick 1 minute

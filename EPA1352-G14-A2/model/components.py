@@ -2,6 +2,7 @@ from mesa import Agent
 from enum import Enum
 
 #test for push
+#?
 # ---------------------------------------------------------------
 class Infra(Agent):
     """
