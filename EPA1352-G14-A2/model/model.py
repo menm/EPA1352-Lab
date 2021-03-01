@@ -46,19 +46,21 @@ def calculate_avg_driving_time(model):
     averaged over all vehicles
 
     """
-    total_driving_time = 0
-    total_removed_vehicle_count = 1
-    for agent in model.schedule.agents:
-        if isinstance(agent,Vehicle):
-            # if type is not None
-            print("instances of vehicles")
-            if agent.removed_at_step:
-                print("increment removed vehicles")
-                total_removed_vehicle_count += 1
-                total_driving_time += (agent.removed_at_step - agent.generated_at_step)
-    average_total_driving_time = total_driving_time /total_removed_vehicle_count
-    print(total_removed_vehicle_count)
-    return average_total_driving_time
+    # total_driving_time = 0
+    # for agent in model.schedule.agents:
+    #     if isinstance(agent,Vehicle):
+    #         # if type is not None
+    #         if agent.removed_at_step is not None:
+    #             model.total_removed_vehicles += 1
+    #             model.total_driving_time += (agent.removed_at_step - agent.generated_at_step)
+
+    if model.total_removed_vehicles != 0:
+        print(model.total_driving_time , model.total_removed_vehicles)
+
+        average_total_driving_time = model.total_driving_time / model.total_removed_vehicles
+        return average_total_driving_time
+    else:
+        return 0
 
 # ---------------------------------------------------------------
 class BangladeshModel(Model):
@@ -104,6 +106,10 @@ class BangladeshModel(Model):
         # CHANGED
         self.datacollector = DataCollector(model_reporters= ({'average_total_waiting_time': calculate_avg_waiting_time,
                                                              'average_total_driving_time': calculate_avg_driving_time}))
+        # Elias having fun
+        self.total_removed_vehicles = 0
+        self.total_driving_time = 0
+
 
     def generate_model(self):
         """
