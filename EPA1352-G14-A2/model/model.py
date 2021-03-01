@@ -5,6 +5,7 @@ from mesa.datacollection import DataCollector
 from components import Source, Sink, SourceSink, Bridge, Link, Vehicle
 import pandas as pd
 from collections import defaultdict
+#test for push
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -93,14 +94,18 @@ class BangladeshModel(Model):
     step_time = 1
 
     # CHANGED
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob = [0,0,0,0]):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob_A=0, break_down_prob_B=0,
+                 break_down_prob_C=0, break_down_prob_D=0):
         self.schedule = BaseScheduler(self) #calls agent step by step in same order
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
         self.sources = []
         self.sinks = []
-        self.break_down_prob = break_down_prob
+        self.break_down_prob_A = break_down_prob_A
+        self.break_down_prob_B = break_down_prob_B
+        self.break_down_prob_C = break_down_prob_C
+        self.break_down_prob_D = break_down_prob_D
 
         self.generate_model()
         # CHANGED
@@ -182,7 +187,8 @@ class BangladeshModel(Model):
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
                     #CHANGED
-                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'], self.break_down_prob)
+                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'], self.break_down_prob_A,
+                                   self.break_down_prob_B, self.break_down_prob_C, self.break_down_prob_D)
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
 

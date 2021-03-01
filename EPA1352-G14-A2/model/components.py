@@ -1,7 +1,7 @@
 from mesa import Agent
 from enum import Enum
 
-
+#test for push
 # ---------------------------------------------------------------
 class Infra(Agent):
     """
@@ -54,23 +54,22 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,0,0,0]):
+                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob_A=0, break_down_prob_B=0,
+                 break_down_prob_C=0, break_down_prob_D=0):
         # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
-        print(break_down_prob)
-        print(break_down_prob[2])
         # assign probability of breaking down to condition of bridge
         if self.condition == 'A':
-            self.break_down = break_down_prob[0]
+            self.break_down = break_down_prob_A
         elif self.condition == 'B':
-            self.break_down = break_down_prob[1]
+            self.break_down = break_down_prob_B
         elif self.condition == 'C':
-            self.break_down = break_down_prob[2]
+            self.break_down = break_down_prob_C
         else:
             # self.break_down == 'D'
-            self.break_down = break_down_prob[3]
+            self.break_down = break_down_prob_D
 
         # bridge breaks down with defined probability
         if self.random.randint(1,100) <= self.break_down:
