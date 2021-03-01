@@ -13,7 +13,7 @@ from model import *
 # run_length = 5 * 24 * 60
 
 # run time 1000 ticks
-run_length = 2000
+run_length = 1
 
 seed = 1234567
 
@@ -26,18 +26,23 @@ print("SEED " + str(sim_model._seed))
 for i in range(run_length):
     sim_model.step()
 
-fixed_params = {}
-variable_params = {'break_down_prob': [[10,0,5,10]]}
+sim_model.datacollector.get_model_vars_dataframe().plot()
 
-batch_run = BatchRunner(BangladeshModel, variable_params, fixed_params, iterations = 1, max_steps=400,
+print("Hello")
+
+
+fixed_params = {}
+# example_list = [0, 0, 5, 10]
+# example_list1 =
+variable_params = {'break_down_prob': ([0,0,5,10],[0,3,6,9])}
+
+batch_run = BatchRunner(BangladeshModel, variable_params, fixed_params, iterations = 1, max_steps=10,
                         model_reporters={'average_total_driving_time': calculate_avg_driving_time})
-#print("sup")
 
 batch_run.run_all()
 
 results = batch_run.get_model_vars_dataframe()
 print(results)
 
-sim_model.datacollector.get_model_vars_dataframe().plot()
 plt.grid(True)
 plt.show()

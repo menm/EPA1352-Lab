@@ -54,12 +54,13 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,3,6,9]):
+                 name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0,0,0,0]):
         # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
-
+        print(break_down_prob)
+        print(break_down_prob[2])
         # assign probability of breaking down to condition of bridge
         if self.condition == 'A':
             self.break_down = break_down_prob[0]
