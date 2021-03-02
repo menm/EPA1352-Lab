@@ -6,6 +6,8 @@ from components import Source, Sink, SourceSink, Bridge, Link, Vehicle
 import pandas as pd
 from collections import defaultdict
 
+#test for push
+#?
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     """
@@ -55,7 +57,7 @@ def calculate_avg_driving_time(model):
     #             model.total_driving_time += (agent.removed_at_step - agent.generated_at_step)
 
     if model.total_removed_vehicles != 0:
-        print(model.total_driving_time , model.total_removed_vehicles)
+        print(model.total_driving_time, model.total_removed_vehicles)
 
         average_total_driving_time = model.total_driving_time / model.total_removed_vehicles
         return average_total_driving_time
@@ -93,7 +95,7 @@ class BangladeshModel(Model):
     step_time = 1
 
     # CHANGED
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob = [0,0,0,0]):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob = [0, 0, 0, 0]):
         self.schedule = BaseScheduler(self) #calls agent step by step in same order
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
@@ -166,7 +168,6 @@ class BangladeshModel(Model):
 
         for df in df_objects_all:
             for _, row in df.iterrows():    # index, row in ...
-
                 # create agents according to model_type
                 model_type = row['model_type']
                 agent = None
@@ -183,7 +184,7 @@ class BangladeshModel(Model):
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
                     #CHANGED
-                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'])
+                    agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'], self.break_down_prob)
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
 
