@@ -1,0 +1,10 @@
+,scenario,A,B,C,D,driving_time
+0,scenario0,0,0,0,0,583.0
+1,scenario1,0,0,0,5,639.0
+2,scenario2,0,0,0,10,691.0
+3,scenario3,0,0,5,10,891.0
+4,scenario4,0,0,10,20,1383.0
+5,scenario5,0,5,10,20,1466.0
+6,scenario6,0,10,20,40,2653.0
+7,scenario7,5,10,20,40,3311.0
+8,scenario8,10,20,40,80,5201.0
