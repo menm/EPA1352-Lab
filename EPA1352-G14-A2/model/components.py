@@ -45,19 +45,20 @@ class Bridge(Infra):
 
     delay_time: int
         the delay (in ticks) caused by this bridge
-    ...
 
-    Specify break_down_prob as parameter
-    Where percentage of category bridges breaking down is in order [A, B, C, D]
+    break_down: int
+        the probability on scale 1 - 100 of bridge breaking down
+        parsed by break_down_prob in order [A,B,C,D]
+    ...
 
     """
 
     def __init__(self, unique_id, model, length=0,
                  name='Unknown', road_name='Unknown', condition='Unknown', break_down_prob = [0, 0, 0, 0]):
 
-        # included break_down_prob in order A -> D
         super().__init__(unique_id, model, length, name, road_name)
         self.condition = condition
+
         # assign probability of breaking down to condition of bridge
         if self.condition == 'A':
             self.break_down = break_down_prob[0]
@@ -66,12 +67,12 @@ class Bridge(Infra):
         elif self.condition == 'C':
             self.break_down = break_down_prob[2]
         else:
-            # self.break_down == 'D'
+            # self.condition = 'D'
             self.break_down = break_down_prob[3]
 
-        # bridge breaks down with defined probability
+        # bridge breaks down with pre-defined probability
         if self.random.randint(1,100) <= self.break_down:
-        # vehicle has unique chance of delay time in ranges according to bridge length
+        # vehicle has unique probability of delay time in ranges orded to bridge length
             if self.length >= 200:
                 self.delay_time = self.random.triangular(60,120,240)
             elif 50 <= self.length < 200:
@@ -80,12 +81,11 @@ class Bridge(Infra):
                 self.delay_time = self.random.uniform(15,60)
             else:
                 self.delay_time = self.random.uniform(10,20)
-        # no delay if no encounter with a bridge
+        # no delay if bridge does not break down
         else:
             self.delay_time = 0
 
 
-    # TODO
     def get_delay_time(self):
         return self.delay_time
 
@@ -240,7 +240,6 @@ class Vehicle(Agent):
         self.waited_at = None
         self.removed_at_step = None
 
-    # Useful for data analysis #
     def __str__(self):
         return "Vehicle" + str(self.unique_id) + \
                " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \

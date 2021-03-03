@@ -29,14 +29,18 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
 # function used for DataCollector during testing
 def calculate_avg_driving_time(model):
     """
-    calculate average driving time of a single vehicle in ticks (=minutes)
-    averaged over all vehicles
+    Calculate average driving time of a single vehicle in ticks (=minutes)
+    Averaged over all vehicles
+    Only takes vehicles into account which have completed the
+    full drive cycle (Source until Sink)
 
     """
 
+    # start when cars have reached sink
     if model.total_removed_vehicles != 0:
         print(model.total_driving_time, model.total_removed_vehicles)
-
+        # divide all cars driven minutes of cars which have completed full drive cyle
+        # by total cars which have been removed
         average_total_driving_time = model.total_driving_time / model.total_removed_vehicles
         return average_total_driving_time
     else:
@@ -68,6 +72,15 @@ class BangladeshModel(Model):
     sinks: list
         all sinks in the network
 
+    break_down_prob: list
+        all break down probabilities in ints (0-100) in order [A,B,C,D]
+
+    total_removed_vehicles: int
+        counter of removed vehicles in system which have reached the sink
+
+    total_driving_time: int
+        number of ticks driven from source to sink added for all vehicles
+
     """
 
     step_time = 1
@@ -78,13 +91,15 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
-        self.break_down_prob = break_down_prob
         self.generate_model()
-        # new attributes
-        self.datacollector = DataCollector(model_reporters= ({'average_total_driving_time': calculate_avg_driving_time}))
 
+        # new attributes
+        self.break_down_prob = break_down_prob
         self.total_removed_vehicles = 0
         self.total_driving_time = 0
+
+        # save average driving time in datacollector
+        self.datacollector = DataCollector(model_reporters=({'average_total_driving_time': calculate_avg_driving_time}))
 
 
     def generate_model(self):
@@ -152,7 +167,7 @@ class BangladeshModel(Model):
                     self.sources.append(agent.unique_id)
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
-                    #CHANGED
+                    # parse break down probability for all bridges
                     agent = Bridge(row['id'], self, row['length'], row['name'], row['road'], row['condition'], self.break_down_prob)
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], row['name'], row['road'])
