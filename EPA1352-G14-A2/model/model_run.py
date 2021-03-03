@@ -29,7 +29,7 @@ for break_down_prob in scenarios:
     # feed model with scenario specific break down probabilities
     sim_model = BangladeshModel(seed=seed, break_down_prob=break_down_prob)
     # check if the seed is set
-    print("SEED " + str(sim_model._seed)
+    print("SEED " + str(sim_model._seed))
     # run model with specified run length
     for i in range(run_length):
         sim_model.step()

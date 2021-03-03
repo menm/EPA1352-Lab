@@ -23,6 +23,7 @@ based on a multiple files:
 ## How to Use
 
 Include whatever you think is necessary for someone to understand your work. The README file is usually the first file someone will see and open. It doesn't need to explain what might be obvious, but it should point out the most important things for someone looking at your work. For example, how to launch your program, what are the main files, where to find them, etc. 
+In order to run the model, it is necessary to place the file N1_infrastructre.csv into the data folder. Then select 
 
 ### Format
 
