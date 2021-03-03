@@ -6,7 +6,6 @@ from components import Source, Sink, SourceSink, Bridge, Link, Vehicle
 import pandas as pd
 from collections import defaultdict
 
-# UPDATED
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -26,35 +25,14 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     y_min = lat_max + lat_edge
     return y_min, y_max, x_min, x_max
 
-#CHANGED
-def calculate_avg_waiting_time(model):
-    """
-    calculate average waiting time of a single vehicle in ticks (=minutes)
-    averaged over all vehicles
 
-    """
-    total_waiting_time = 0
-    total_vehicle_count = 0
-    for agent in model.schedule.agents:
-        if isinstance(agent, Vehicle):
-            total_vehicle_count += 1
-            total_waiting_time += agent.waiting_time
-    average_total_waiting_time = total_waiting_time/total_vehicle_count
-    return average_total_waiting_time
-
+# function used for DataCollector during testing
 def calculate_avg_driving_time(model):
     """
     calculate average driving time of a single vehicle in ticks (=minutes)
     averaged over all vehicles
 
     """
-    # total_driving_time = 0
-    # for agent in model.schedule.agents:
-    #     if isinstance(agent,Vehicle):
-    #         # if type is not None
-    #         if agent.removed_at_step is not None:
-    #             model.total_removed_vehicles += 1
-    #             model.total_driving_time += (agent.removed_at_step - agent.generated_at_step)
 
     if model.total_removed_vehicles != 0:
         print(model.total_driving_time, model.total_removed_vehicles)
@@ -93,8 +71,6 @@ class BangladeshModel(Model):
     """
 
     step_time = 1
-
-    # CHANGED
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob = [0, 0, 0, 0]):
         self.schedule = BaseScheduler(self) #calls agent step by step in same order
         self.running = True
@@ -103,12 +79,10 @@ class BangladeshModel(Model):
         self.sources = []
         self.sinks = []
         self.break_down_prob = break_down_prob
-
         self.generate_model()
-        # CHANGED
-        self.datacollector = DataCollector(model_reporters= ({'average_total_waiting_time': calculate_avg_waiting_time,
-                                                             'average_total_driving_time': calculate_avg_driving_time}))
-        # Elias having fun
+        # new attributes
+        self.datacollector = DataCollector(model_reporters= ({'average_total_driving_time': calculate_avg_driving_time}))
+
         self.total_removed_vehicles = 0
         self.total_driving_time = 0
 
@@ -125,18 +99,13 @@ class BangladeshModel(Model):
         # a list of names of roads to be generated
         roads = ['N1']
 
-        # roads = [
-        #     'N1', 'N2', 'N3', 'N4',
-        #     'N5', 'N6', 'N7', 'N8'
-        # ]
 
         df_objects_all = []
         for road in roads:
 
-            # be careful with the sorting
-            # better remove sorting by id
             # Select all the objects on a particular road
-            #df_objects_on_road = df[df['road'] == road].sort_values(by=['id'])
+            # following code was not needed, because road links are already ordered
+            #   df_objects_on_road = df[df['road'] == road].sort_values(by=['id'])
             df_objects_on_road = df[df['road'] == road]
 
             if not df_objects_on_road.empty:

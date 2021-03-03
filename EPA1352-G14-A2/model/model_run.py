@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from model import *
-
 import pandas as pd
 """
     Run simulation
@@ -10,10 +9,10 @@ import pandas as pd
 
 # ---------------------------------------------------------------
 
-# run time 5 x 24 hours; 1 tick 1 minute
+# run time 5 x 24 hours; 1 tick = 1 minute
 # run_length = 5 * 24 * 60
 
-# run time 1000 ticks
+# hence run time
 run_length = 7200
 
 seed = 1234567
