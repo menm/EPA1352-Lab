@@ -74,11 +74,11 @@ class Bridge(Infra):
         # bridge breaks down with defined probability
         if self.random.randint(1,100) <= self.break_down:
         # vehicle has unique chance of delay time in ranges according to bridge length
-            if self.length > 200:
+            if self.length >= 200:
                 self.delay_time = self.random.triangular(60,120,240)
-            elif 50 < self.length < 200:
+            elif 50 <= self.length < 200:
                 self.delay_time = self.random.uniform(45,90)
-            elif 10 < self.length < 50:
+            elif 10 <= self.length < 50:
                 self.delay_time = self.random.uniform(15,60)
             else:
                 self.delay_time = self.random.uniform(10,20)
@@ -97,7 +97,7 @@ class Bridge(Infra):
 # ---------------------------------------------------------------
 class Link(Infra):
     pass
-
+#github test comment push
 
 # ---------------------------------------------------------------
 class Sink(Infra):
@@ -176,7 +176,7 @@ class SourceSink(Source, Sink):
     """
     pass
 
-
+#Elias test comment
 # ---------------------------------------------------------------
 class Vehicle(Agent):
     """
