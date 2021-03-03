@@ -6,7 +6,7 @@ from components import Source, Sink, SourceSink, Bridge, Link, Vehicle
 import pandas as pd
 from collections import defaultdict
 
-#test for push to local branch
+# UPDATED
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
