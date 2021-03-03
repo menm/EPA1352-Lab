@@ -2,7 +2,7 @@ from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
 from mesa.datacollection import DataCollector
-from components import Source, Sink, SourceSink, Bridge, Link, Vehicle
+from components import Source, Sink, SourceSink, Bridge, Link
 import pandas as pd
 from collections import defaultdict
 
@@ -39,7 +39,7 @@ def calculate_avg_driving_time(model):
     # start when cars have reached sink
     if model.total_removed_vehicles != 0:
         print(model.total_driving_time, model.total_removed_vehicles)
-        # divide all cars driven minutes of cars which have completed full drive cyle
+        # divide all cars driven minutes of cars which have completed full drive cycle
         # by total cars which have been removed
         average_total_driving_time = model.total_driving_time / model.total_removed_vehicles
         return average_total_driving_time
@@ -84,17 +84,17 @@ class BangladeshModel(Model):
     """
 
     step_time = 1
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob = [0, 0, 0, 0]):
-        self.schedule = BaseScheduler(self) #calls agent step by step in same order
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, break_down_prob=[0, 0, 0, 0]):
+        self.schedule = BaseScheduler(self)   #calls agent step by step in same order
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
         self.sources = []
         self.sinks = []
+        self.break_down_prob = break_down_prob
         self.generate_model()
 
         # new attributes
-        self.break_down_prob = break_down_prob
         self.total_removed_vehicles = 0
         self.total_driving_time = 0
 
