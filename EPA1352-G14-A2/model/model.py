@@ -91,6 +91,7 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
+        # new attribute for break down prob
         self.break_down_prob = break_down_prob
         self.generate_model()
 
