@@ -1,18 +1,24 @@
-# Example README File
+# README File Assignment 2
 
-Created by: EPA1352 Group xx 
+Created by: EPA1352 Group 14
 
 | Name    | Student Number |
 |:-------:|:--------|
-| Mary White  | 1234567 | 
-| David Brown | 7654321 |
+| Elias Bach  | 5379229 | 
+| Lidha Hu | 4593979 |
+| Ibrahim Jabri| 4291034  |
+| Luca Ruijs | 5413370 |
+| Pieter van Spaendonck |  4476697 |
 
 
 ## Introduction
-
-Every project should have a README file to help a first-time user understand what it is about and how they might be able to use it. This file is where you (as a group) shall provide the information needed by the TAs to evaluate and grade your work. 
-
-If you are looking for information about the Demo model of Assignment 2, navigate to the [model/README.md](model/README.md) in the [model](model) directory. Have **fun** modeling in Python! 
+For Assignment 2 of the EPA1352 Advanced Simulation course, a transport model demo has been created to analyze the 
+economic vital N1 road from Chittagong to Dhaka in Bangladesh. This transport model runs
+based on a multiple files:
+* model.py, see EPA1352-G14-A2/model/model.py, which takes N1_infrastructure.csv as an input file that specifies the infrastructure model components to be generated. 
+* model_run.py, see EPA1352-G14-A2/model/model_run.py, which runs the model and the experiments.
+* components.py, see EPA1352-G14-A2/model/components.py, which defines the various infrastructure components. 
+* model_viz, see EPA1352-G14-A2/model/model_viz.py, which runs the model with visualization.
 
 ## How to Use
 
