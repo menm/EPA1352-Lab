@@ -44,7 +44,7 @@ for break_down_prob in scenarios:
     count += 1
 
 # save results to csv
-results.to_csv('../data/scenarios_data.csv', index=False)
+results.to_csv('../data/scenarios_data.csv.csv', index=False)
 
 # plot results
 results.plot(kind='bar',x='scenario',y='driving_time', legend=None, figsize=(12, 8))
