@@ -40,11 +40,11 @@ for break_down_prob in scenarios:
     else:
         average_total_driving_time = 0
 
-    results.loc[count] = ['scenario'+str(count), sim_model.break_down_prob[0], sim_model.break_down_prob[1],
+    results.loc[count] = ['S'+str(count), sim_model.break_down_prob[0], sim_model.break_down_prob[1],
                             sim_model.break_down_prob[2], sim_model.break_down_prob[3], average_total_driving_time]
     count += 1
 
-results.to_csv('../data/scenarios_data')
+results.to_csv('../data/scenarios_data.csv')
 
 # sim_model.datacollector.get_model_vars_dataframe().plot()
 #
