@@ -55,7 +55,10 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    file_name = '../data/demo-4.csv'
+    # file_name = '../data/demo-4.csv'
+
+    # test with dummy data
+    file_name = '../data/dummy_data.csv'
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -79,7 +82,8 @@ class BangladeshModel(Model):
 
         # a list of names of roads to be generated
         # TODO You can also read in the road column to generate this list automatically
-        roads = ['N1', 'N2']
+        roads = df.road.unique()
+        #roads = ['N1', 'N2']
 
         df_objects_all = []
         for road in roads:
