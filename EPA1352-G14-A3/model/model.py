@@ -55,7 +55,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    # file_name = '../data/demo-4.csv'
+    #file_name = '../data/demo-4.csv'
 
     # test with dummy data
     file_name = '../data/dummy_data.csv'
@@ -87,6 +87,7 @@ class BangladeshModel(Model):
 
         df_objects_all = []
         for road in roads:
+            print(road)
             # Select all the objects on a particular road in the original order as in the cvs
             df_objects_on_road = df[df['road'] == road]
 
@@ -95,13 +96,14 @@ class BangladeshModel(Model):
 
                 """
                 Set the path 
-                1. get the serie of object IDs on a given road in the cvs in the original order
+                1. get the series of object IDs on a given road in the cvs in the original order
                 2. add the (straight) path to the path_ids_dict
                 3. put the path in reversed order and reindex
                 4. add the path to the path_ids_dict so that the vehicles can drive backwards too
                 """
                 path_ids = df_objects_on_road['id']
                 path_ids.reset_index(inplace=True, drop=True)
+                print(path_ids)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
                 path_ids = path_ids[::-1]
