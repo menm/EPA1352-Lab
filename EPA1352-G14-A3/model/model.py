@@ -1,9 +1,12 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
+from networkx import Graph
+
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
+import networkx as nx
 
 
 # ---------------------------------------------------------------
@@ -55,7 +58,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    #file_name = '../data/demo-4.csv'
+    # file_name = '../data/demo-4.csv'
 
     # test with dummy data
     file_name = '../data/dummy_data.csv'
@@ -83,11 +86,11 @@ class BangladeshModel(Model):
         # a list of names of roads to be generated
         # TODO You can also read in the road column to generate this list automatically
         roads = df.road.unique()
-        #roads = ['N1', 'N2']
+        # print(roads)
+        # roads = ['N1', 'N2']
 
         df_objects_all = []
         for road in roads:
-            print(road)
             # Select all the objects on a particular road in the original order as in the cvs
             df_objects_on_road = df[df['road'] == road]
 
@@ -103,10 +106,13 @@ class BangladeshModel(Model):
                 """
                 path_ids = df_objects_on_road['id']
                 path_ids.reset_index(inplace=True, drop=True)
-                print(path_ids)
+                # print(path_ids)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
+
+                # creates the reversed
                 path_ids = path_ids[::-1]
+                # print(path_ids)
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
@@ -148,6 +154,8 @@ class BangladeshModel(Model):
                     agent = SourceSink(row['id'], self, row['length'], name, row['road'])
                     self.sources.append(agent.unique_id)
                     self.sinks.append(agent.unique_id)
+                    # print(self.sources)
+                    # print(self.sinks)
                 elif model_type == 'bridge':
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
                 elif model_type == 'link':
@@ -162,6 +170,18 @@ class BangladeshModel(Model):
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
+        print(self.sources)
+        print(self.sinks)
+
+
+        # generate networkX model here
+        # create the network
+        G = nx.Graph()
+        G.add_nodes_from(self.sources)
+        G.add_nodes_from(self.sinks)
+        print("HELLO", G.number_of_nodes())
+        # nodes: sourcesinks
+        # edges: links
 
     def get_random_route(self, source):
         """
@@ -177,12 +197,23 @@ class BangladeshModel(Model):
     # TODO
     def get_route(self, source):
         return self.get_straight_route(source)
+        # return self.get_shortest_route(source)
 
     def get_straight_route(self, source):
         """
         pick up a straight route given an origin
         """
         return self.path_ids_dict[source, None]
+
+    def get_shortest_route(self, source):
+
+
+        while True:
+            sink = self.random.choice(self.sinks)
+            if sink is not source:
+                break
+                # nx.shortest_path_length(G, source= source, target= sink, weight=length)
+        return self.path_ids_dict[source, sink]
 
     def step(self):
         """
