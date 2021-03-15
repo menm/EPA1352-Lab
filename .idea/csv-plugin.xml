@@ -52,6 +52,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\EPA1352-G14-A3\model\model.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

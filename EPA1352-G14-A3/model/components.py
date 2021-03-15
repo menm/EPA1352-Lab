@@ -237,14 +237,19 @@ class Vehicle(Agent):
         """
         Vehicle waits or drives at each step
         """
+        print("error1")
         if self.state == Vehicle.State.WAIT:
             self.waiting_time = max(self.waiting_time - 1, 0)
             if self.waiting_time == 0:
+                print("error waiting time == 0")
                 self.waited_at = self.location
                 self.state = Vehicle.State.DRIVE
 
+        print("before driving")
         if self.state == Vehicle.State.DRIVE:
+            print("driving func")
             self.drive()
+            print("really driving")
 
         """
         To print the vehicle trajectory at each step

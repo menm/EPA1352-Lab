@@ -11,7 +11,7 @@ N1,1000008,bridge,A,,8,8,4
 N1,1000009,link,NaN,,9,9,2500
 N1,1000010,bridge,B,,10,10,500
 N1,1000011,link,NaN,,11,11,800
-N1,1000012,sourcesink,,SoSi2,13,13,20
+N1,1000012,sourcesink,,SoSi2,12,12,20
 N2,1000013,sourcesink,,SoSi3,0,12,4
 N2,1000014,link ,NaN,,1,11,1800
 N2,1000015,bridge ,A,,2,10,200
