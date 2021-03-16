@@ -80,8 +80,6 @@ class BangladeshModel(Model):
 
         df = pd.read_csv(self.file_name)
 
-
-
         # a list of names of roads to be generated
         # TODO You can also read in the road column to generate this list automatically
         roads = df.road.unique()
@@ -140,21 +138,21 @@ class BangladeshModel(Model):
                 else:
                     name = name.strip()
 
-                if model_type == 'source':
+                if model_type == 'Source':
                     agent = Source(row['id'], self, row['length'], name, row['road'])
                     self.sources.append(agent.unique_id)
-                elif model_type == 'sink':
+                elif model_type == 'Sink':
                     agent = Sink(row['id'], self, row['length'], name, row['road'])
                     self.sinks.append(agent.unique_id)
-                elif model_type == 'sourcesink':
+                elif model_type == 'SourceSink':
                     agent = SourceSink(row['id'], self, row['length'], name, row['road'])
                     self.sources.append(agent.unique_id)
                     self.sinks.append(agent.unique_id)
-                elif model_type == 'bridge':
+                elif model_type == 'Bridge':
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
-                elif model_type == 'link':
+                elif model_type == 'Link':
                     agent = Link(row['id'], self, row['length'], name, row['road'])
-                elif model_type == 'intersection':
+                elif model_type == 'Intersection':
                     if not row['id'] in self.schedule._agents:
                         agent = Intersection(row['id'], self, row['length'], name, row['road'])
 
@@ -168,7 +166,7 @@ class BangladeshModel(Model):
         all_id_pairs_and_weights = []
         all_nodes = set()
 
-        print("the road pairs are:")
+        #print("the road pairs are:")
         for index, row in df.iterrows():
             #print(df)
             all_nodes.add(row["id"])
@@ -178,7 +176,7 @@ class BangladeshModel(Model):
 
                     all_id_pairs_and_weights.append(id_pair)
 
-        print(all_id_pairs_and_weights)
+        #print(all_id_pairs_and_weights)
 
         G = nx.Graph()
         # global G
@@ -202,6 +200,7 @@ class BangladeshModel(Model):
     # TODO
     def get_route(self, source):
         return self.get_straight_route(source)
+        #return self.get_shortest_route(source)
 
     def get_straight_route(self, source):
         """
@@ -209,18 +208,17 @@ class BangladeshModel(Model):
         """
         return self.path_ids_dict[source, None]
 
-    def get_shortest_route(self,source):
-        global G
-        while True:
-            # different source and sink
-            sink = self.random.choice(self.sinks)
-            if sink is not source:
-                break
-        shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
-        print(shortest)
-
-
-        return self.path_ids_dict[source,sink]
+    # def get_shortest_route(self,source):
+    #     print("a")
+    #     global G
+    #     while True:
+    #         # different source and sink
+    #         sink = self.random.choice(self.sinks)
+    #         if sink is not source:
+    #             break
+    #     shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
+    #     print(shortest)
+    #     return self.path_ids_dict[source,sink]
 
 
     def step(self):

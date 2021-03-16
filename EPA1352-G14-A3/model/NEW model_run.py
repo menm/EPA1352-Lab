@@ -1,4 +1,4 @@
-from model import BangladeshModel
+from A3_model import BangladeshModel
 
 """
     Run simulation

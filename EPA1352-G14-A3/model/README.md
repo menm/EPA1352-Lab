@@ -27,7 +27,7 @@ A simple transport model demo in MESA for EPA1352 Advanced Simulation course Ass
 
 ## Files
 
-* [model.py](model.py): Contains the model `BangladeshModel` which is a subclass of Mesa `Model`. It reads a `csv` file with specific format for (transport) model generation. (See the README in the `data` directory for data format.) In addition to dynamic behavior, each model component instance (i.e., object) also has geo-location variables, i.e. latitude and longitude in Decimal Degrees (DD). The given bounds of the latitude and longitude of all objects are translated into the bounds of the HTML5 canvas, which is used in case the visualization is launched. 
+* [model.py](A3_model.py): Contains the model `BangladeshModel` which is a subclass of Mesa `Model`. It reads a `csv` file with specific format for (transport) model generation. (See the README in the `data` directory for data format.) In addition to dynamic behavior, each model component instance (i.e., object) also has geo-location variables, i.e. latitude and longitude in Decimal Degrees (DD). The given bounds of the latitude and longitude of all objects are translated into the bounds of the HTML5 canvas, which is used in case the visualization is launched. 
 
     In this file, you modify the model generation and add your own routines.
 
@@ -39,7 +39,7 @@ A simple transport model demo in MESA for EPA1352 Advanced Simulation course Ass
 
     In this file, you define simple visualization.
 
-* [model_run.py](A3 model_run.py): Sets up the model run (conditions). Calls the model. Run the simulation without visualization. 
+* [model_run.py](NEW model_run.py): Sets up the model run (conditions). Calls the model. Run the simulation without visualization. 
 
     In this file, you define model batch runs.
   
