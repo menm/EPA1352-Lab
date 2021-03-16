@@ -4,6 +4,7 @@ from mesa.space import ContinuousSpace
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
+import networkx as nx
 
 
 # ---------------------------------------------------------------
@@ -55,7 +56,9 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    file_name = '../data/demo-4.csv'
+    #file_name = '../data/demo-4.csv'
+
+    file_name = '../data/roads_data_processed_1503.csv'
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -77,9 +80,14 @@ class BangladeshModel(Model):
 
         df = pd.read_csv(self.file_name)
 
+
+
         # a list of names of roads to be generated
         # TODO You can also read in the road column to generate this list automatically
-        roads = ['N1', 'N2']
+        roads = df.road.unique()
+        print(roads)
+        #roads = ['N1', 'N2']
+
 
         df_objects_all = []
         for road in roads:
@@ -119,8 +127,8 @@ class BangladeshModel(Model):
         # not to be confused with the SimpleContinuousModule visualization
         self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
 
-        for df in df_objects_all:
-            for _, row in df.iterrows():  # index, row in ...
+        for i in df_objects_all:
+            for _, row in i.iterrows():  # index, row in ...
 
                 # create agents according to model_type
                 model_type = row['model_type'].strip()
@@ -157,6 +165,29 @@ class BangladeshModel(Model):
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
 
+        all_id_pairs_and_weights = []
+        all_nodes = set()
+
+        print("the road pairs are:")
+        for index, row in df.iterrows():
+            #print(df)
+            all_nodes.add(row["id"])
+            if (index < df.shape[0] - 1):
+                if (df.road.iloc[index] == df.road.iloc[index + 1]):
+                    id_pair = (df.id.iloc[index], df.id.iloc[index + 1], int(row['length']))
+
+                    all_id_pairs_and_weights.append(id_pair)
+
+        print(all_id_pairs_and_weights)
+
+        G = nx.Graph()
+        # global G
+        G.add_nodes_from(all_nodes)
+        print(G.number_of_nodes())
+        G.add_weighted_edges_from(all_id_pairs_and_weights)
+        print(G.number_of_edges())
+
+
     def get_random_route(self, source):
         """
         pick up a random route given an origin
@@ -177,6 +208,20 @@ class BangladeshModel(Model):
         pick up a straight route given an origin
         """
         return self.path_ids_dict[source, None]
+
+    def get_shortest_route(self,source):
+        global G
+        while True:
+            # different source and sink
+            sink = self.random.choice(self.sinks)
+            if sink is not source:
+                break
+        shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
+        print(shortest)
+
+
+        return self.path_ids_dict[source,sink]
+
 
     def step(self):
         """
