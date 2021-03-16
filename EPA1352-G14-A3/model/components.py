@@ -237,19 +237,14 @@ class Vehicle(Agent):
         """
         Vehicle waits or drives at each step
         """
-        print("error1")
         if self.state == Vehicle.State.WAIT:
             self.waiting_time = max(self.waiting_time - 1, 0)
             if self.waiting_time == 0:
-                print("error waiting time == 0")
                 self.waited_at = self.location
                 self.state = Vehicle.State.DRIVE
 
-        print("before driving")
         if self.state == Vehicle.State.DRIVE:
-            print("driving func")
             self.drive()
-            print("really driving")
 
         """
         To print the vehicle trajectory at each step
@@ -276,8 +271,6 @@ class Vehicle(Agent):
         """
 
         self.location_index += 1
-        # print("path_ids", self.path_ids)
-        # print("location index: ", self.path_ids[self.location_index])
         next_id = self.path_ids[self.location_index]
         next_infra = self.model.schedule._agents[next_id]  # Access to protected member _agents
 

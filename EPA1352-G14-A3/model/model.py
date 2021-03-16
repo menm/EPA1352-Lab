@@ -1,12 +1,9 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
-from networkx import Graph
-
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
-import networkx as nx
 
 
 # ---------------------------------------------------------------
@@ -58,10 +55,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    #file_name = '../data/demo-4.csv'
-
-    # test with dummy data
-    file_name = '../data/dummy_data.csv'
+    file_name = '../data/demo-4.csv'
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -71,7 +65,6 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
-        self.bridges = []
 
         self.generate_model()
 
@@ -85,8 +78,8 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
 
         # a list of names of roads to be generated
-        roads = df.road.unique()
-
+        # TODO You can also read in the road column to generate this list automatically
+        roads = ['N1', 'N2']
 
         df_objects_all = []
         for road in roads:
@@ -98,20 +91,16 @@ class BangladeshModel(Model):
 
                 """
                 Set the path 
-                1. get the series of object IDs on a given road in the cvs in the original order
+                1. get the serie of object IDs on a given road in the cvs in the original order
                 2. add the (straight) path to the path_ids_dict
                 3. put the path in reversed order and reindex
                 4. add the path to the path_ids_dict so that the vehicles can drive backwards too
                 """
                 path_ids = df_objects_on_road['id']
                 path_ids.reset_index(inplace=True, drop=True)
-                # print(path_ids)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
-
-                # creates the reversed
                 path_ids = path_ids[::-1]
-                # print(path_ids)
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
@@ -125,8 +114,6 @@ class BangladeshModel(Model):
             df['lon'].max(),
             0.05
         )
-
-        print(self.path_ids_dict)
 
         # ContinuousSpace from the Mesa package;
         # not to be confused with the SimpleContinuousModule visualization
@@ -153,9 +140,10 @@ class BangladeshModel(Model):
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'sourcesink':
                     agent = SourceSink(row['id'], self, row['length'], name, row['road'])
+                    self.sources.append(agent.unique_id)
+                    self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
-                    self.bridges.append(agent.unique_id)
                 elif model_type == 'link':
                     agent = Link(row['id'], self, row['length'], name, row['road'])
                 elif model_type == 'intersection':
@@ -168,32 +156,6 @@ class BangladeshModel(Model):
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
-        print(df_objects_all)
-
-
-        # generate networkX model here
-        # create the network
-        # G = nx.Graph()
-        # G.add_nodes_from(self.sources)
-        # G.add_nodes_from(self.sinks)
-        # G.add_nodes_from(self.bridges)
-        # #
-        # print("HELLO", G.number_of_nodes())
-        # nodes: sourcesinks and intersections
-        # edges: links and bridges
-
-        # for row in df:
-        # if df[row].model_type == sourcesink and df[row + 1].model_type = link:
-            # adjecency = (df.id[row], df.id[row + 1])
-
-            # for road select sourcesinks, enumerate through those, connect all
-
-            # for interctions
-    # New strategy, make geodataframa , then network x graph
-
-    # ro make geodataframe, use lengths to create linestrings?
-
-        # volgensmij is alle adjencency de path_ids_dict!!
 
     def get_random_route(self, source):
         """
@@ -208,33 +170,13 @@ class BangladeshModel(Model):
 
     # TODO
     def get_route(self, source):
-        #return self.get_straight_route(source)
-        return self.get_random_route(source)
-        #return self.get_shortest_route(source)
+        return self.get_straight_route(source)
 
     def get_straight_route(self, source):
         """
         pick up a straight route given an origin
         """
         return self.path_ids_dict[source, None]
-
-    def get_shortest_route(self, source):
-        """
-        pick up the shortest route route given an origin and destination
-        """
-
-        # return dict of route
-        while True:
-            sink = self.random.choice(self.sinks)
-            if sink is not source:
-                break
-            # check whether route between source and sink already exist in path_id_dict
-            if self.path_ids_dict.get([source, sink]) is None:
-                # if not run shortest path and save to df
-                self.path_ids_dict[source, sink] = nx.shortest_path(G, source= source, target= sink, weight= 'weight')
-
-        # if it already exists or is calculated, return path
-        return self.path_ids_dict[source, sink]
 
     def step(self):
         """
