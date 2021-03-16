@@ -61,7 +61,10 @@ class BangladeshModel(Model):
     #file_name = '../data/demo-4.csv'
 
     # test with dummy data
-    file_name = '../data/dummy_data.csv'
+    # file_name = '../data/dummy_data.csv'
+
+    # roads data
+    file_name = '../data/roads_data_processed_1503.csv'
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -87,13 +90,14 @@ class BangladeshModel(Model):
         # a list of names of roads to be generated
         roads = df.road.unique()
 
-
+        # df for mesa
         df_objects_all = []
         for road in roads:
             # Select all the objects on a particular road in the original order as in the cvs
             df_objects_on_road = df[df['road'] == road]
 
             if not df_objects_on_road.empty:
+                print("not empty")
                 df_objects_all.append(df_objects_on_road)
 
                 """
@@ -126,7 +130,9 @@ class BangladeshModel(Model):
             0.05
         )
 
-        print(self.path_ids_dict)
+        #print(self.path_ids_dict)
+
+        #print(df_objects_all)
 
         # ContinuousSpace from the Mesa package;
         # not to be confused with the SimpleContinuousModule visualization
@@ -168,32 +174,82 @@ class BangladeshModel(Model):
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
-        print(df_objects_all)
+        #print(df_objects_all)
+
+        # df for network x
+        all_id_pairs_and_weights = []
+        all_nodes = set()
+
+        for road in roads:
+            print(road)
+
+            # already exists
+            #df_objects_on_road = df[df['road'] == road]
+            #print(df_objects_on_road)
+            #df_objects_on_road.reset_index(inplace=True, drop=True)
+            # print(df_objects_on_road)
+            path_length_list = []
+            id_list = []
+            road_pair_list = []
+            startindex = 0
+            partial_path_length = 0
+
+            # all except the last are empty!!!??
+            print(df_objects_on_road)
+
+            # something goes wrong here, only takes last road not all roads, becasue only the last one is not empty!!
+            for index, row in df_objects_on_road.iterrows():
+                # select all sourcesinks and intersections
+                # it now only selects the last road Z013
+                #print(df_objects_on_road)
+                print("rows: ", index)
+
+                # select all sourcesinks and intersections
+                if (row['model_type'] == "SourceSink") or (row['model_type'] == "Intersection"):
+                    print("ja")
+                # now only prints the first and last item?
+                    # add ids to nodes list
+                    id_list.append(row['id'])
+                    print(row['id'])
+                    all_nodes.add(row['id'])
+                    if startindex > 0:
+                        path_length_list.append(partial_path_length)
+                        partial_path_length = 0
+                    startindex += 1
+
+                # sum up the partial lengths
+                partial_path_length += int(round(row['length']))
+
+            for i in range(len(id_list) - 1):
+                id_pair = (id_list[i], id_list[i + 1], path_length_list[i])
+                #print(id_pair)
+                road_pair_list.append(id_pair)
+                all_id_pairs_and_weights.append(id_pair)
+
+        all_nodes = list(all_nodes)
+        print(id_list)
+        print("all nodes:", all_nodes)
+
 
 
         # generate networkX model here
-        # create the network
-        # G = nx.Graph()
-        # G.add_nodes_from(self.sources)
-        # G.add_nodes_from(self.sinks)
-        # G.add_nodes_from(self.bridges)
-        # #
-        # print("HELLO", G.number_of_nodes())
-        # nodes: sourcesinks and intersections
-        # edges: links and bridges
+        G = nx.Graph()
+        G.add_nodes_from(all_nodes)
+        print("num nodes: ",G.number_of_nodes())
+        G.add_weighted_edges_from(all_id_pairs_and_weights)
+        print("num edges: ",G.number_of_edges())
 
-        # for row in df:
-        # if df[row].model_type == sourcesink and df[row + 1].model_type = link:
-            # adjecency = (df.id[row], df.id[row + 1])
 
-            # for road select sourcesinks, enumerate through those, connect all
+        # pos = nx.spring_layout(G)
+        #
+        # plt.figure(figsize=(15, 15))
+        #
+        # # version 2
+        # nx.draw(G, pos, node_size=60, font_size=8)
 
-            # for interctions
-    # New strategy, make geodataframa , then network x graph
-
-    # ro make geodataframe, use lengths to create linestrings?
-
-        # volgensmij is alle adjencency de path_ids_dict!!
+        # specify edge labels explicitly
+        # edge_labels = dict([((u, v,), d['weight'])
+        #                     for u, v, d in G.edges(data=True)])
 
     def get_random_route(self, source):
         """
@@ -222,17 +278,39 @@ class BangladeshModel(Model):
         """
         pick up the shortest route route given an origin and destination
         """
+        shortest_route = []
+        full_path_ids = []
+        full_list = []
 
         # return dict of route
         while True:
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
-            # check whether route between source and sink already exist in path_id_dict
+            # if path does not exist yet, calculate shortest route
             if self.path_ids_dict.get([source, sink]) is None:
-                # if not run shortest path and save to df
-                self.path_ids_dict[source, sink] = nx.shortest_path(G, source= source, target= sink, weight= 'weight')
+                # calc shortest route
+                shortest_route = nx.shortest_path(G, source=source, target=sink, weight='weight')
+                # find full mesa csv path_id_list
+                # select all node pairs
+                for previous, current in zip(shortest_route, shortest_route[1:]):
+                    # if id of previous node is lower, step down els step up
+                    if previous > current:
+                        step = -1
+                    else:
+                        step = 1
+                    # add ranges of id's between nodes (links)
+                    full_list.append(list(range(previous, current, step)))
 
+                # add last item
+                full_list.append([shortest[-1]])
+                # flatten list
+                full_path_ids = [j for sub in full_list for j in sub]
+
+                # write to mesa path_id_dict
+                self.path_ids_dict[source, sink] = full_path_ids
+
+        print("path ids's: ", self.path_ids_dict[source, sink])
         # if it already exists or is calculated, return path
         return self.path_ids_dict[source, sink]
 
