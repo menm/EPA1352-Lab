@@ -97,7 +97,7 @@ class BangladeshModel(Model):
             df_objects_on_road = df[df['road'] == road]
 
             if not df_objects_on_road.empty:
-                print("not empty")
+                #print("not empty")
                 df_objects_all.append(df_objects_on_road)
 
                 """
@@ -129,7 +129,7 @@ class BangladeshModel(Model):
             df['lon'].max(),
             0.05
         )
-
+        print(roads, "YO")
         #print(self.path_ids_dict)
 
         #print(df_objects_all)
@@ -138,8 +138,9 @@ class BangladeshModel(Model):
         # not to be confused with the SimpleContinuousModule visualization
         self.space = ContinuousSpace(x_max, y_max, True, x_min, y_min)
 
-        for df in df_objects_all:
-            for _, row in df.iterrows():  # index, row in ...
+        for i in df_objects_all:
+            #print(type(i))
+            for _, row in i.iterrows():  # index, row in ...
 
                 # create agents according to model_type
                 model_type = row['model_type'].strip()
@@ -174,19 +175,29 @@ class BangladeshModel(Model):
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
-        #print(df_objects_all)
+        print("YAY", type(df_objects_all))
+        print("WHAT", type(df))
 
+        # The problem: changed name df in the previous part of code, otherwise df would be the last one in that whole df
+        # and turned on the df_objects on road, because it is in the loop, otherwise it is set to the previous one, where it
+        # only registers the last one, so you have to actually set it to df[df['road'] == road]
+
+        roads = df.road.unique()
+        print("?", roads)
+
+        # df for mesa
+        df_objects_all = []
         # df for network x
         all_id_pairs_and_weights = []
         all_nodes = set()
 
         for road in roads:
-            print(road)
+            #print("HELLO", road)
 
             # already exists
-            #df_objects_on_road = df[df['road'] == road]
+            df_objects_on_road = df[df['road'] == road]
             #print(df_objects_on_road)
-            #df_objects_on_road.reset_index(inplace=True, drop=True)
+            df_objects_on_road.reset_index(inplace=True, drop=True)
             # print(df_objects_on_road)
             path_length_list = []
             id_list = []
@@ -195,14 +206,14 @@ class BangladeshModel(Model):
             partial_path_length = 0
 
             # all except the last are empty!!!??
-            print(df_objects_on_road)
+            print("HELLO ELIAS", df_objects_on_road)
 
             # something goes wrong here, only takes last road not all roads, becasue only the last one is not empty!!
             for index, row in df_objects_on_road.iterrows():
                 # select all sourcesinks and intersections
                 # it now only selects the last road Z013
                 #print(df_objects_on_road)
-                print("rows: ", index)
+                #print("rows: ", index)
 
                 # select all sourcesinks and intersections
                 if (row['model_type'] == "SourceSink") or (row['model_type'] == "Intersection"):
@@ -210,7 +221,7 @@ class BangladeshModel(Model):
                 # now only prints the first and last item?
                     # add ids to nodes list
                     id_list.append(row['id'])
-                    print(row['id'])
+                    #print(row['id'])
                     all_nodes.add(row['id'])
                     if startindex > 0:
                         path_length_list.append(partial_path_length)
@@ -227,7 +238,7 @@ class BangladeshModel(Model):
                 all_id_pairs_and_weights.append(id_pair)
 
         all_nodes = list(all_nodes)
-        print(id_list)
+        #print(id_list)
         print("all nodes:", all_nodes)
 
 
@@ -264,8 +275,8 @@ class BangladeshModel(Model):
 
     # TODO
     def get_route(self, source):
-        #return self.get_straight_route(source)
-        return self.get_random_route(source)
+        return self.get_straight_route(source)
+        #return self.get_random_route(source)
         #return self.get_shortest_route(source)
 
     def get_straight_route(self, source):
@@ -302,8 +313,8 @@ class BangladeshModel(Model):
                     # add ranges of id's between nodes (links)
                     full_list.append(list(range(previous, current, step)))
 
-                # add last item
-                full_list.append([shortest[-1]])
+                # add last item - #Lidh changed something here
+                full_list.append([shortest_route[-1]])
                 # flatten list
                 full_path_ids = [j for sub in full_list for j in sub]
 

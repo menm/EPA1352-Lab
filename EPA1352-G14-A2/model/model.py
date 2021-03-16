@@ -110,7 +110,7 @@ class BangladeshModel(Model):
         Warning: the labels are the same as the csv column labels
         """
 
-        df = pd.read_csv('../data/N1_infrastructure.csv') # reads in file and creates very basic simulation
+        df = pd.read_csv('../../EPA1352-G14-A3/data/N1_infrastructure.csv') # reads in file and creates very basic simulation
 
         # a list of names of roads to be generated
         roads = ['N1']
