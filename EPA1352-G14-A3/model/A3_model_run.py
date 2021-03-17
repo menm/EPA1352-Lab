@@ -15,10 +15,10 @@ run_length = 10
 # run time 1000 ticks
 # run_length = 1000
 
-seed = 12345678
+seed = 12345670
 
 # Batch run the model, for the specified scenarios and number of iterations.
-parameter_sweep = {'scenario': range(1, 9), 'seed': range(10000, 10003)}
+parameter_sweep = {'scenario': range(1, 3), 'seed': range(10000, 10003)}
 
 num_iterations = 1
 # num_steps = 5 * 24 * 60
@@ -40,9 +40,9 @@ print(df_batch)
 # TODO process output data
 #
 
-# TODO put output into different scenario files
-# for i in range(1,9):
-#    output_file[output_file['scenario']==i].to_csv('scenario'+str(i)+'csv', index=False)
+# TODO put output into different scenario files and vehicle data is empty now
+for i in range(1,3):
+   df_batch[df_batch['scenario']==i].to_csv('scenario'+str(i)+'.csv', index=False)
 
 
 # Old stuff

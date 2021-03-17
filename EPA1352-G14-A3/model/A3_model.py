@@ -80,6 +80,7 @@ class BangladeshModel(Model):
             agent_reporters={"Start": lambda x: x.generated_at_step if isinstance(x.unique_id, str) else None,
                              "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None}
         )
+
     def generate_model(self):
         """
         generate the simulation model according to the csv file component information
@@ -90,7 +91,7 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
         # scenario csv
         self.scenarios = pd.read_csv( '../data/A3_scenarios.csv', sep = ";")
-
+        print(self.scenarios)
 
         # a list of names of roads to be generated
         #roads = df.road.unique()

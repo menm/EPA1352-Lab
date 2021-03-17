@@ -67,6 +67,7 @@ class Bridge(Infra):
         # TODO
         # error index out of bound
         probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
+        print("probabilty of breaking down: ", probability_of_breaking)
         print("scenario: ", self.model.scenario)
 
         # bridge breaks down with pre-defined probability
