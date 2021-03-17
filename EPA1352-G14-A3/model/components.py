@@ -26,6 +26,9 @@ class Infra(Agent):
         self.name = name
         self.road_name = road_name
         self.vehicle_count = 0
+        self.generated_at_step = 0
+        self.removed_at_step = 0
+        self.removed_vehicles = []
 
     def step(self):
         pass
@@ -48,6 +51,7 @@ class Bridge(Infra):
         the delay (in ticks) caused by this bridge
     ...
 
+
     """
 
     def __init__(self, unique_id, model, length=0,
@@ -55,14 +59,35 @@ class Bridge(Infra):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
+        self.delay_time = 0
+        self.broken = False
 
         # TODO
-        self.delay_time = self.random.randrange(0, 10)
-        # print(self.delay_time)
+        # Figure out this part; how to incorportate the scenario's
+        # deciding when bridge is broken, based on the scenario.
+        scenario_df = self.model.scenarios
+        # probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
+        print(self.model.scenario)
+        # if self.random.random() * 100 < probability_of_breaking:
+        #    self.broken= True
 
     # TODO
     def get_delay_time(self):
+        # 1 step = 1 min
+        if self.broken:
+            if self.length > 200:
+                self.delay_time = self.random.triangular(60, 120, 240)
+            if 50 < self.length <= 200:
+                self.delay_time = self.random.uniform(45, 90)
+            if 10 < self.length <= 50:
+                self.delay_time = self.random.uniform(15, 60)
+            if self.length <= 10:
+                self.delay_time = self.random.uniform(10, 20)
+        else:
+            self.delay_time = 0
         return self.delay_time
+
+
 
 
 # ---------------------------------------------------------------

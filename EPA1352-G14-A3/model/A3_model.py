@@ -5,6 +5,7 @@ from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
 import networkx as nx
+from mesa.datacollection import DataCollector
 
 
 # ---------------------------------------------------------------
@@ -60,7 +61,7 @@ class BangladeshModel(Model):
     #file_name = '../data/dummy_data.csv'
     file_name = '../data/roads_data_processed_1503.csv'
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
+    def __init__(self, scenario = 0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
         self.schedule = BaseScheduler(self)
         self.running = True
@@ -68,9 +69,17 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
+        self.scenario = scenario
 
         self.generate_model()
 
+        #self.model_log = {}  # to store model data as json file
+
+        # data collection agents
+        self.datacollector = DataCollector(
+            agent_reporters={"Start": lambda x: x.generated_at_step if isinstance(x.unique_id, str) else None,
+                             "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None}
+        )
     def generate_model(self):
         """
         generate the simulation model according to the csv file component information
@@ -79,9 +88,16 @@ class BangladeshModel(Model):
         """
 
         df = pd.read_csv(self.file_name)
+        # scenario csv
+        self.scenarios = pd.read_csv( '../data/scenarios.csv')
+
 
         # a list of names of roads to be generated
         roads = df.road.unique()
+
+        # for experements only N1 and N2 taken into account for computational time
+        # roads = ["N1, N2"]
+
 
 
         df_objects_all = []
@@ -161,6 +177,7 @@ class BangladeshModel(Model):
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
 
+        # Define nodes and edges
         all_id_pairs_and_weights = []
         all_nodes = set()
 
@@ -169,11 +186,11 @@ class BangladeshModel(Model):
             if (index < df.shape[0] - 1):
                 if (df.road.iloc[index] == df.road.iloc[index + 1]):
                     id_pair = (df.id.iloc[index], df.id.iloc[index + 1], int(row['length']))
-
+                    # weigh edges
                     all_id_pairs_and_weights.append(id_pair)
 
 
-        # Build network
+        # Build network in networkx
         global G
         G = nx.Graph()
         G.add_nodes_from(all_nodes)
@@ -218,7 +235,7 @@ class BangladeshModel(Model):
         #print("get dict",self.path_ids_dict.get([source, sink]))
         #if self.path_ids_dict.get([source, sink]) is None:
         print("keys: ",self.path_ids_dict.keys())
-        if [source, sink] not in self.path_ids_dict.keys():
+        if (source, sink) not in self.path_ids_dict.keys():
             #shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
             # calculate and assign shortest path to path_id_dict as pandas series
             print("checking if dictionary exists")

@@ -1,3 +1,5 @@
+from mesa.batchrunner import BatchRunner
+
 from A3_model import BangladeshModel
 
 """
@@ -15,11 +17,40 @@ run_length = 25
 
 seed = 12345678
 
-sim_model = BangladeshModel(seed=seed)
+# Batch run the model, for the specified scenarios and number of iterations.
+parameter_sweep = {'scenario': range(1, 9), 'seed': range(10000, 10003)}
 
-# Check if the seed is set
-print("SEED " + str(sim_model._seed))
+num_iterations = 1
+# num_steps = 5 * 24 * 60
+num_steps = 50
+# agent reporters:
+agent_reporter_dict = {'vehicle_data': 'removed_vehicles'}
 
-# One run with given steps
-for i in range(run_length):
-    sim_model.step()
+batch_run = BatchRunner(BangladeshModel, variable_parameters=parameter_sweep,
+                        display_progress=False, iterations=num_iterations, max_steps=num_steps,
+                        agent_reporters=agent_reporter_dict)
+
+batch_run.run_all()
+
+# Get agent variables from all simulations in a dataframe
+df_batch = batch_run.get_agent_vars_dataframe()
+
+print(df_batch)
+
+# TODO process output data
+#
+
+# TODO put output into different scenario files
+# for i in range(1,9):
+#    output_file[output_file['scenario']==i].to_csv('scenario'+str(i)+'csv', index=False)
+
+
+# Old stuff
+# sim_model = BangladeshModel(seed=seed)
+#
+# # Check if the seed is set
+# print("SEED " + str(sim_model._seed))
+#
+# # One run with given steps
+# for i in range(run_length):
+#     sim_model.step()
