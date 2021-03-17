@@ -110,7 +110,8 @@ class BangladeshModel(Model):
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
-                #print(self.path_ids_dict)
+                # print(type(self.path_ids_dict[path_ids[0], None]))
+
 
         # put back to df with selected roads so that min and max and be easily calculated
         df = pd.concat(df_objects_all)
@@ -211,9 +212,8 @@ class BangladeshModel(Model):
         #print(self.path_ids_dict)
         return self.path_ids_dict[source, None]
 
-    def get_shortest_route(self,source):
-        print("a")
-        #global G
+    def get_shortest_route(self, source):
+
         while True:
             # different source and sink
             sink = self.random.choice(self.sinks)
@@ -223,8 +223,9 @@ class BangladeshModel(Model):
         # dict:
         # key = (source,sink)
         shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
-        print(shortest)
-        return self.path_ids_dict[source,sink]
+        shortpath = pd.Series(shortest)
+        self.path_ids_dict[source, sink] = shortpath
+        return self.path_ids_dict[source, sink]
 
 
     def step(self):
