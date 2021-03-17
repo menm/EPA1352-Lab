@@ -62,14 +62,16 @@ class Bridge(Infra):
         self.delay_time = 0
         self.broken = False
 
-        # TODO
-        # Figure out this part; how to incorportate the scenario's
         # deciding when bridge is broken, based on the scenario.
         scenario_df = self.model.scenarios
-        # probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
-        print(self.model.scenario)
-        # if self.random.random() * 100 < probability_of_breaking:
-        #    self.broken= True
+        # TODO
+        # error index out of bound
+        probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
+        print("scenario: ", self.model.scenario)
+
+        # bridge breaks down with pre-defined probability
+        if self.random.random() * 100 < probability_of_breaking:
+           self.broken= True
 
     # TODO
     def get_delay_time(self):
@@ -117,6 +119,9 @@ class Sink(Infra):
     def remove(self, vehicle):
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
+        # append removed vehicle vars
+        self.removed_vehicles.append(vehicle.vehicle_variables())
+
         print(str(self) + ' REMOVE ' + str(vehicle))
 
 
@@ -239,6 +244,8 @@ class Vehicle(Agent):
         self.location_offset = location_offset
         self.pos = generated_by.pos
         self.path_ids = path_ids
+        self.removed_vehicles = []
+
         # default values
         self.state = Vehicle.State.DRIVE
         self.location_index = 0
@@ -303,6 +310,8 @@ class Vehicle(Agent):
             # arrive at the sink
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
+            # add removed vehicles to list
+            self.removed_vehicles.append([self.unique_id, self.generated_at_step, self.removed_at_step])
             self.location.remove(self)
             return
         elif isinstance(next_infra, Bridge):

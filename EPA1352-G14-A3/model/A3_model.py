@@ -89,14 +89,14 @@ class BangladeshModel(Model):
 
         df = pd.read_csv(self.file_name)
         # scenario csv
-        self.scenarios = pd.read_csv( '../data/scenarios.csv')
+        self.scenarios = pd.read_csv( '../data/A3_scenarios.csv', sep = ";")
 
 
         # a list of names of roads to be generated
-        roads = df.road.unique()
+        #roads = df.road.unique()
 
-        # for experements only N1 and N2 taken into account for computational time
-        # roads = ["N1, N2"]
+        # for experements only N1 and N2 + side roads taken into account for computational time
+        roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
 
 
 

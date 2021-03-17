@@ -10,7 +10,7 @@ from A3_model import BangladeshModel
 # ---------------------------------------------------------------
 
 # run time 5 x 24 hours; 1 tick 1 minute
-run_length = 25
+run_length = 10
 
 # run time 1000 ticks
 # run_length = 1000
@@ -22,7 +22,7 @@ parameter_sweep = {'scenario': range(1, 9), 'seed': range(10000, 10003)}
 
 num_iterations = 1
 # num_steps = 5 * 24 * 60
-num_steps = 50
+num_steps = 5
 # agent reporters:
 agent_reporter_dict = {'vehicle_data': 'removed_vehicles'}
 
