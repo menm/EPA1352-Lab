@@ -8,12 +8,12 @@ from A3_model import BangladeshModel
 # ---------------------------------------------------------------
 
 # run time 5 x 24 hours; 1 tick 1 minute
-run_length = 100
+run_length = 25
 
 # run time 1000 ticks
 # run_length = 1000
 
-seed = 1234567
+seed = 12345678
 
 sim_model = BangladeshModel(seed=seed)
 

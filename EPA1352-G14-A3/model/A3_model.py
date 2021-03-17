@@ -81,10 +81,8 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
 
         # a list of names of roads to be generated
-        # TODO You can also read in the road column to generate this list automatically
         roads = df.road.unique()
         print(roads)
-        #roads = ['N1', 'N2']
 
 
         df_objects_all = []
@@ -199,7 +197,7 @@ class BangladeshModel(Model):
                 break
         return self.path_ids_dict[source, sink]
 
-    # TODO
+    # TODO check if route already exists in dict
     def get_route(self, source):
         #return self.get_straight_route(source)
         return self.get_shortest_route(source)
@@ -222,6 +220,7 @@ class BangladeshModel(Model):
 
         # dict:
         # key = (source,sink)
+        # value = pd.Series with id values
         shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
         shortpath = pd.Series(shortest)
         self.path_ids_dict[source, sink] = shortpath
