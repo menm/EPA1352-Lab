@@ -39,7 +39,7 @@ A simple transport model demo in MESA for EPA1352 Advanced Simulation course Ass
 
     In this file, you define simple visualization.
 
-* [model_run.py](NEW model_run.py): Sets up the model run (conditions). Calls the model. Run the simulation without visualization. 
+* [model_run.py](A3_model_run.py): Sets up the model run (conditions). Calls the model. Run the simulation without visualization. 
 
     In this file, you define model batch runs.
   

@@ -57,7 +57,7 @@ class BangladeshModel(Model):
     step_time = 1
 
     #file_name = '../data/demo-4.csv'
-
+    #file_name = '../data/dummy_data.csv'
     file_name = '../data/roads_data_processed_1503.csv'
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
@@ -110,6 +110,7 @@ class BangladeshModel(Model):
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
+                #print(self.path_ids_dict)
 
         # put back to df with selected roads so that min and max and be easily calculated
         df = pd.concat(df_objects_all)
@@ -177,14 +178,13 @@ class BangladeshModel(Model):
                     all_id_pairs_and_weights.append(id_pair)
 
         #print(all_id_pairs_and_weights)
-
+        global G
         G = nx.Graph()
-        # global G
         G.add_nodes_from(all_nodes)
         print(G.number_of_nodes())
         G.add_weighted_edges_from(all_id_pairs_and_weights)
         print(G.number_of_edges())
-
+        print(nx.is_connected(G))
 
     def get_random_route(self, source):
         """
@@ -194,31 +194,37 @@ class BangladeshModel(Model):
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
+                print(sink)
                 break
         return self.path_ids_dict[source, sink]
 
     # TODO
     def get_route(self, source):
-        return self.get_straight_route(source)
-        #return self.get_shortest_route(source)
+        #return self.get_straight_route(source)
+        return self.get_shortest_route(source)
+        #return self.get_random_route(source)
 
     def get_straight_route(self, source):
         """
         pick up a straight route given an origin
         """
+        #print(self.path_ids_dict)
         return self.path_ids_dict[source, None]
 
-    # def get_shortest_route(self,source):
-    #     print("a")
-    #     global G
-    #     while True:
-    #         # different source and sink
-    #         sink = self.random.choice(self.sinks)
-    #         if sink is not source:
-    #             break
-    #     shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
-    #     print(shortest)
-    #     return self.path_ids_dict[source,sink]
+    def get_shortest_route(self,source):
+        print("a")
+        #global G
+        while True:
+            # different source and sink
+            sink = self.random.choice(self.sinks)
+            if sink is not source:
+                break
+
+        # dict:
+        # key = (source,sink)
+        shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
+        print(shortest)
+        return self.path_ids_dict[source,sink]
 
 
     def step(self):
