@@ -82,7 +82,6 @@ class BangladeshModel(Model):
 
         # a list of names of roads to be generated
         roads = df.road.unique()
-        print(roads)
 
 
         df_objects_all = []
@@ -108,7 +107,6 @@ class BangladeshModel(Model):
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
-                # print(type(self.path_ids_dict[path_ids[0], None]))
 
 
         # put back to df with selected roads so that min and max and be easily calculated
@@ -166,9 +164,7 @@ class BangladeshModel(Model):
         all_id_pairs_and_weights = []
         all_nodes = set()
 
-        #print("the road pairs are:")
         for index, row in df.iterrows():
-            #print(df)
             all_nodes.add(row["id"])
             if (index < df.shape[0] - 1):
                 if (df.road.iloc[index] == df.road.iloc[index + 1]):
@@ -176,14 +172,15 @@ class BangladeshModel(Model):
 
                     all_id_pairs_and_weights.append(id_pair)
 
-        #print(all_id_pairs_and_weights)
+
+        # Build network
         global G
         G = nx.Graph()
         G.add_nodes_from(all_nodes)
-        print(G.number_of_nodes())
         G.add_weighted_edges_from(all_id_pairs_and_weights)
-        print(G.number_of_edges())
-        print(nx.is_connected(G))
+        print("Number of nodes in network:", G.number_of_nodes())
+        print("Number of edges in network:",G.number_of_edges())
+        print("Network is connected:  ", nx.is_connected(G))
 
     def get_random_route(self, source):
         """
@@ -193,7 +190,6 @@ class BangladeshModel(Model):
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
-                print(sink)
                 break
         return self.path_ids_dict[source, sink]
 
@@ -207,23 +203,29 @@ class BangladeshModel(Model):
         """
         pick up a straight route given an origin
         """
-        #print(self.path_ids_dict)
         return self.path_ids_dict[source, None]
 
     def get_shortest_route(self, source):
-
+        print("entering the while loop")
         while True:
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
 
-        # dict:
-        # key = (source,sink)
-        # value = pd.Series with id values
-        shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
-        shortpath = pd.Series(shortest)
-        self.path_ids_dict[source, sink] = shortpath
+        print("exited the while loop")
+        # check if route between source and sink already exists in path_id_dict
+        #print("get dict",self.path_ids_dict.get([source, sink]))
+        #if self.path_ids_dict.get([source, sink]) is None:
+        print("keys: ",self.path_ids_dict.keys())
+        if [source, sink] not in self.path_ids_dict.keys():
+            #shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
+            # calculate and assign shortest path to path_id_dict as pandas series
+            print("checking if dictionary exists")
+            self.path_ids_dict[source, sink] = pd.Series(nx.shortest_path(G, source=source, target=sink, \
+                                                                          weight='weight'))
+            print("new route added to dict")
+
         return self.path_ids_dict[source, sink]
 
 
