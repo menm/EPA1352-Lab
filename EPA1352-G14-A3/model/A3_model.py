@@ -5,18 +5,14 @@ from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
 import networkx as nx
-from mesa.datacollection import DataCollector
 
-def compute_average_driving(model):
-    """compute the average driving time of trucks in the model
+def driving_time(model):
+    if len(model.driving_times) > 0:
+        driving_times = sum(model.driving_times) / len(model.driving_times)
+        return driving_times
+    else:
+        return 0
 
-    Args:
-        model (mesa model component): mesa model
-
-    Returns:
-        int: average driving time
-    """
-    return sum(model.drive_times) / len(model.drive_times) if len(model.drive_times) else 0
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     """
@@ -78,8 +74,8 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
+        self.driving_times = []
         self.scenario = scenario
-        self.drive_times = []
 
         self.generate_model()
 
@@ -265,7 +261,6 @@ class BangladeshModel(Model):
         """
         Advance the simulation by one step.
         """
-        # self.datacollector.collect(self)
         self.schedule.step()
 
 # EOF -----------------------------------------------------------

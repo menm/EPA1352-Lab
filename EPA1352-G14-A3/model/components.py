@@ -121,7 +121,7 @@ class Sink(Infra):
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
         # append removed vehicle vars
-        self.model.drive_times.append(vehicle.removed_at_step - vehicle.generated_at_step)
+        self.model.driving_times.append(vehicle.removed_at_step - vehicle.generated_at_step)
 
         self.removed_vehicles.append(vehicle.vehicle_variables())
         print("Hello",self.removed_vehicles)
