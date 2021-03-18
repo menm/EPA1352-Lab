@@ -67,7 +67,7 @@ class Bridge(Infra):
         # TODO
         # error index out of bound
         probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
-        print("probabilty of breaking down: ", probability_of_breaking)
+        print("probability of breaking down: ", probability_of_breaking)
         print("scenario: ", self.model.scenario)
 
         # bridge breaks down with pre-defined probability
@@ -122,6 +122,7 @@ class Sink(Infra):
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
         # append removed vehicle vars
         self.removed_vehicles.append(vehicle.vehicle_variables())
+        print("Hello",self.removed_vehicles)
 
         print(str(self) + ' REMOVE ' + str(vehicle))
 
@@ -255,10 +256,17 @@ class Vehicle(Agent):
         self.removed_at_step = None
 
     def __str__(self):
+
         return "Vehicle" + str(self.unique_id) + \
                " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
                " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
                str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
+
+    def vehicle_variables(self):
+
+        "Outputs relevant variables for further processing"
+        return [self.unique_id, self.generated_at_step, self.removed_at_step]
+
 
     def set_path(self):
         """
