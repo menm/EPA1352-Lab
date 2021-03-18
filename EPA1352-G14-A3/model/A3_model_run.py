@@ -18,7 +18,7 @@ run_length = 10
 seed = 12345670
 
 # Batch run the model, for the specified scenarios and number of iterations.
-parameter_sweep = {'scenario': range(1, 3), 'seed': range(10000, 10003)}
+parameter_sweep = {'scenario': range(1,3), 'seed': range(10000, 10003)}
 
 num_iterations = 1
 # num_steps = 5 * 24 * 60
