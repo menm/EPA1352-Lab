@@ -6,6 +6,8 @@ import pandas as pd
 from collections import defaultdict
 import networkx as nx
 
+# ---------------------------------------------------------------
+
 def driving_time(model):
     if len(model.driving_times) > 0:
         driving_times = sum(model.driving_times) / len(model.driving_times)
@@ -13,7 +15,6 @@ def driving_time(model):
     else:
         return 0
 
-# ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     """
     Set the HTML continuous space canvas bounding box (for visualization)
@@ -63,7 +64,6 @@ class BangladeshModel(Model):
     step_time = 1
 
     #file_name = '../data/demo-4.csv'
-    #file_name = '../data/dummy_data.csv'
     file_name = '../data/roads_data_processed_1503.csv'
 
     def __init__(self, scenario = 0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
@@ -79,17 +79,6 @@ class BangladeshModel(Model):
 
         self.generate_model()
 
-        # total wiating time
-
-        # for random routes and shortest paths
-
-
-        # # data collection agents
-        # self.datacollector = DataCollector(
-        #     agent_reporters={"Start": lambda x: x.generated_at_step if isinstance(x.unique_id, str) else None,
-        #                      "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None,
-        #                      "Waiting time": lambda x: x.waiting_time if isinstance(x.unique_id, str) else None}
-        # )
 
     def generate_model(self):
         """
@@ -99,17 +88,15 @@ class BangladeshModel(Model):
         """
 
         df = pd.read_csv(self.file_name)
+
         # scenario csv
         self.scenarios = pd.read_csv( '../data/A3_scenarios.csv', sep = ";")
-        #print(self.scenarios)
 
         # a list of names of roads to be generated
-        #roads = df.road.unique()
+        roads = df.road.unique()
 
-        # for experements only N1 and N2 + side roads taken into account for computational time
-        roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
-
-
+        # a list of names of national roads N1 and N2, and its N-sideroads
+        # roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
 
         df_objects_all = []
         for road in roads:
@@ -188,27 +175,27 @@ class BangladeshModel(Model):
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
 
+        #TODO COMMENT CODE HERE
         # Define nodes and edges
         all_id_pairs_and_weights = []
         all_nodes = set()
 
         for index, row in df.iterrows():
             all_nodes.add(row["id"])
-            if (index < df.shape[0] - 1):
-                if (df.road.iloc[index] == df.road.iloc[index + 1]):
+            if index < df.shape[0] - 1:
+                if df.road.iloc[index] == df.road.iloc[index + 1]:
                     id_pair = (df.id.iloc[index], df.id.iloc[index + 1], int(row['length']))
                     # weigh edges
                     all_id_pairs_and_weights.append(id_pair)
-
 
         # Build network in networkx
         global G
         G = nx.Graph()
         G.add_nodes_from(all_nodes)
         G.add_weighted_edges_from(all_id_pairs_and_weights)
-        #print("Number of nodes in network:", G.number_of_nodes())
-        #print("Number of edges in network:",G.number_of_edges())
-        #print("Network is connected:  ", nx.is_connected(G))
+        # print("Number of nodes in network:", G.number_of_nodes())
+        # print("Number of edges in network:",G.number_of_edges())
+        # print("Network is connected:  ", nx.is_connected(G))
 
     def get_random_route(self, source):
         """
@@ -221,7 +208,6 @@ class BangladeshModel(Model):
                 break
         return self.path_ids_dict[source, sink]
 
-    # TODO check if route already exists in dict
     def get_route(self, source):
         #return self.get_straight_route(source)
         return self.get_shortest_route(source)
@@ -233,29 +219,21 @@ class BangladeshModel(Model):
         """
         return self.path_ids_dict[source, None]
 
+#TODO COMMENTING THIS PART OF CODE
     def get_shortest_route(self, source):
-        #print("entering the while loop")
         while True:
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
 
-        #print("exited the while loop")
         # check if route between source and sink already exists in path_id_dict
-        #print("get dict",self.path_ids_dict.get([source, sink]))
-        #if self.path_ids_dict.get([source, sink]) is None:
-        #print("keys: ",self.path_ids_dict.keys())
         if (source, sink) not in self.path_ids_dict.keys():
-            #shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
             # calculate and assign shortest path to path_id_dict as pandas series
-            #print("checking if dictionary exists")
-            self.path_ids_dict[source, sink] = pd.Series(nx.shortest_path(G, source=source, target=sink, \
-                                                                          weight='weight'))
-            #print("new route added to dict")
+            shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
+            self.path_ids_dict[source, sink] = pd.Series(shortest)
 
         return self.path_ids_dict[source, sink]
-
 
     def step(self):
         """

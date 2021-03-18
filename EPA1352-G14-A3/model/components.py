@@ -28,7 +28,6 @@ class Infra(Agent):
         self.vehicle_count = 0
         self.generated_at_step = 0
         self.removed_at_step = 0
-        self.removed_vehicles = []
 
     def step(self):
         pass
@@ -62,19 +61,16 @@ class Bridge(Infra):
         self.delay_time = 0
         self.broken = False
 
-        # deciding when bridge is broken, based on the scenario.
+        # deciding when bridge is broken, based on the scenarios.
         scenario_df = self.model.scenarios
-        # TODO
-        # error index out of bound
+        # the probability of a bridge breaking down in a specific scenario
         probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
-        #("probability of breaking down: ", probability_of_breaking)
-        #print("scenario: ", self.model.scenario)
 
         # bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
 
-    # TODO
+    # TODO COMMENTING THIS PART
     def get_delay_time(self):
         # 1 step = 1 min
         if self.broken:
@@ -120,11 +116,8 @@ class Sink(Infra):
     def remove(self, vehicle):
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
-        # append removed vehicle vars
+        # add driving time to the list
         self.model.driving_times.append(vehicle.removed_at_step - vehicle.generated_at_step)
-
-        self.removed_vehicles.append(vehicle.vehicle_variables())
-        print("Hello",self.removed_vehicles)
 
         print(str(self) + ' REMOVE ' + str(vehicle))
 
@@ -248,7 +241,6 @@ class Vehicle(Agent):
         self.location_offset = location_offset
         self.pos = generated_by.pos
         self.path_ids = path_ids
-        self.removed_vehicles = []
 
         # default values
         self.state = Vehicle.State.DRIVE
@@ -263,11 +255,6 @@ class Vehicle(Agent):
                " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
                " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
                str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
-
-    def vehicle_variables(self):
-
-        "Outputs relevant variables for further processing"
-        return [self.unique_id, self.generated_at_step, self.removed_at_step]
 
 
     def set_path(self):
@@ -318,12 +305,8 @@ class Vehicle(Agent):
         next_infra = self.model.schedule._agents[next_id]  # Access to protected member _agents
 
         if isinstance(next_infra, Sink):
-            # arrive at the sink
-            print("YOU HAVE ARRIVED AT A SINK")
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
-            # add removed vehicles to list
-            self.removed_vehicles.append([self.unique_id, self.generated_at_step, self.removed_at_step, self.waiting_time])
             self.location.remove(self)
             return
         elif isinstance(next_infra, Bridge):
