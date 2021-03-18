@@ -7,7 +7,16 @@ from collections import defaultdict
 import networkx as nx
 from mesa.datacollection import DataCollector
 
+def compute_average_driving(model):
+    """compute the average driving time of trucks in the model
 
+    Args:
+        model (mesa model component): mesa model
+
+    Returns:
+        int: average driving time
+    """
+    return sum(model.drive_times) / len(model.drive_times) if len(model.drive_times) else 0
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     """
@@ -70,6 +79,7 @@ class BangladeshModel(Model):
         self.sources = []
         self.sinks = []
         self.scenario = scenario
+        self.drive_times = []
 
         self.generate_model()
 
@@ -78,12 +88,12 @@ class BangladeshModel(Model):
         # for random routes and shortest paths
 
 
-        # data collection agents
-        self.datacollector = DataCollector(
-            agent_reporters={"Start": lambda x: x.generated_at_step if isinstance(x.unique_id, str) else None,
-                             "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None,
-                             "Waiting time": lambda x: x.waiting_time if isinstance(x.unique_id, str) else None}
-        )
+        # # data collection agents
+        # self.datacollector = DataCollector(
+        #     agent_reporters={"Start": lambda x: x.generated_at_step if isinstance(x.unique_id, str) else None,
+        #                      "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None,
+        #                      "Waiting time": lambda x: x.waiting_time if isinstance(x.unique_id, str) else None}
+        # )
 
     def generate_model(self):
         """
@@ -255,7 +265,7 @@ class BangladeshModel(Model):
         """
         Advance the simulation by one step.
         """
-        self.datacollector.collect(self)
+        # self.datacollector.collect(self)
         self.schedule.step()
 
 # EOF -----------------------------------------------------------
