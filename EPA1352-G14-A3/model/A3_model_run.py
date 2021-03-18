@@ -9,12 +9,6 @@ from A3_model import BangladeshModel
 
 # ---------------------------------------------------------------
 
-# run time 5 x 24 hours; 1 tick 1 minute
-run_length = 10
-
-# run time 1000 ticks
-# run_length = 1000
-
 seed = 12345670
 
 # Batch run the model, for the specified scenarios and number of iterations.
@@ -22,7 +16,7 @@ parameter_sweep = {'scenario': range(1,3), 'seed': range(10000, 10003)}
 
 num_iterations = 1
 # num_steps = 5 * 24 * 60
-num_steps = 5
+num_steps = 200
 # agent reporters:
 agent_reporter_dict = {'vehicle_data': 'removed_vehicles'}
 

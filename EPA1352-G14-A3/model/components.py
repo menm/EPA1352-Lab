@@ -67,8 +67,8 @@ class Bridge(Infra):
         # TODO
         # error index out of bound
         probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
-        print("probability of breaking down: ", probability_of_breaking)
-        print("scenario: ", self.model.scenario)
+        #("probability of breaking down: ", probability_of_breaking)
+        #print("scenario: ", self.model.scenario)
 
         # bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
@@ -317,10 +317,11 @@ class Vehicle(Agent):
 
         if isinstance(next_infra, Sink):
             # arrive at the sink
+            print("YOU HAVE ARRIVED AT A SINK")
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
             # add removed vehicles to list
-            self.removed_vehicles.append([self.unique_id, self.generated_at_step, self.removed_at_step])
+            self.removed_vehicles.append([self.unique_id, self.generated_at_step, self.removed_at_step, self.waiting_time])
             self.location.remove(self)
             return
         elif isinstance(next_infra, Bridge):

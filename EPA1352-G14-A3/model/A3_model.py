@@ -73,12 +73,16 @@ class BangladeshModel(Model):
 
         self.generate_model()
 
-        #self.model_log = {}  # to store model data as json file
+        # total wiating time
+
+        # for random routes and shortest paths
+
 
         # data collection agents
         self.datacollector = DataCollector(
             agent_reporters={"Start": lambda x: x.generated_at_step if isinstance(x.unique_id, str) else None,
-                             "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None}
+                             "Stop": lambda x: x.removed_at_step if isinstance(x.unique_id, str) else None,
+                             "Waiting time": lambda x: x.waiting_time if isinstance(x.unique_id, str) else None}
         )
 
     def generate_model(self):
@@ -91,7 +95,7 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
         # scenario csv
         self.scenarios = pd.read_csv( '../data/A3_scenarios.csv', sep = ";")
-        print(self.scenarios)
+        #print(self.scenarios)
 
         # a list of names of roads to be generated
         #roads = df.road.unique()
@@ -196,9 +200,9 @@ class BangladeshModel(Model):
         G = nx.Graph()
         G.add_nodes_from(all_nodes)
         G.add_weighted_edges_from(all_id_pairs_and_weights)
-        print("Number of nodes in network:", G.number_of_nodes())
-        print("Number of edges in network:",G.number_of_edges())
-        print("Network is connected:  ", nx.is_connected(G))
+        #print("Number of nodes in network:", G.number_of_nodes())
+        #print("Number of edges in network:",G.number_of_edges())
+        #print("Network is connected:  ", nx.is_connected(G))
 
     def get_random_route(self, source):
         """
@@ -224,25 +228,25 @@ class BangladeshModel(Model):
         return self.path_ids_dict[source, None]
 
     def get_shortest_route(self, source):
-        print("entering the while loop")
+        #print("entering the while loop")
         while True:
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
 
-        print("exited the while loop")
+        #print("exited the while loop")
         # check if route between source and sink already exists in path_id_dict
         #print("get dict",self.path_ids_dict.get([source, sink]))
         #if self.path_ids_dict.get([source, sink]) is None:
-        print("keys: ",self.path_ids_dict.keys())
+        #print("keys: ",self.path_ids_dict.keys())
         if (source, sink) not in self.path_ids_dict.keys():
             #shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
             # calculate and assign shortest path to path_id_dict as pandas series
-            print("checking if dictionary exists")
+            #print("checking if dictionary exists")
             self.path_ids_dict[source, sink] = pd.Series(nx.shortest_path(G, source=source, target=sink, \
                                                                           weight='weight'))
-            print("new route added to dict")
+            #print("new route added to dict")
 
         return self.path_ids_dict[source, sink]
 
@@ -251,6 +255,7 @@ class BangladeshModel(Model):
         """
         Advance the simulation by one step.
         """
+        self.datacollector.collect(self)
         self.schedule.step()
 
 # EOF -----------------------------------------------------------
