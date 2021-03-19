@@ -61,16 +61,18 @@ class Bridge(Infra):
         self.delay_time = 0
         self.broken = False
 
-        # deciding when bridge is broken, based on the scenarios.
+        # Decide when a bridge is broken, based on the scenarios.
         scenario_df = self.model.scenarios
-        # the probability of a bridge breaking down in a specific scenario
+        # The probability of a bridge breaking down in a specific scenario
         probability_of_breaking = scenario_df.loc[scenario_df['Scenario']== self.model.scenario][self.condition].values[0]
 
-        # bridge breaks down with pre-defined probability
+        # Bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
 
-    # TODO COMMENTING THIS PART
+    # A function to assign a delay time to the bridge.
+    # If self broken is true, then the bridges get a specific
+    # delay time based on their length
     def get_delay_time(self):
         # 1 step = 1 min
         if self.broken:
@@ -85,9 +87,6 @@ class Bridge(Infra):
         else:
             self.delay_time = 0
         return self.delay_time
-
-
-
 
 # ---------------------------------------------------------------
 class Link(Infra):
@@ -116,7 +115,9 @@ class Sink(Infra):
     def remove(self, vehicle):
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
-        # add driving time to the list
+        # Add driving time to the list
+        # The driving time is defined as the difference in timestep
+        # between a vehicle entering and exiting the system.
         self.model.driving_times.append(vehicle.removed_at_step - vehicle.generated_at_step)
 
         print(str(self) + ' REMOVE ' + str(vehicle))
@@ -250,12 +251,10 @@ class Vehicle(Agent):
         self.removed_at_step = None
 
     def __str__(self):
-
         return "Vehicle" + str(self.unique_id) + \
                " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
                " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
                str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
-
 
     def set_path(self):
         """

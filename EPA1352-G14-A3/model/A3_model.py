@@ -8,7 +8,11 @@ import networkx as nx
 
 # ---------------------------------------------------------------
 
+# Function to collect the driving time
 def driving_time(model):
+    # If the list of driving times is not empty,
+    # then take the driving time.
+    # Otherwise this value will be 0.
     if len(model.driving_times) > 0:
         driving_times = sum(model.driving_times) / len(model.driving_times)
         return driving_times
@@ -74,7 +78,11 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
+
+        # Add driving times as a model variable to store
+        # the driving times of the vehicles
         self.driving_times = []
+        # Add scenarios as a model variable to store
         self.scenario = scenario
 
         self.generate_model()
@@ -89,13 +97,14 @@ class BangladeshModel(Model):
 
         df = pd.read_csv(self.file_name)
 
-        # scenario csv
+        # Read in the scenario csv
         self.scenarios = pd.read_csv( '../data/A3_scenarios.csv', sep = ";")
 
-        # a list of names of roads to be generated
+        # A list of names of roads to be generated
+        # This list contains all the roads
         roads = df.road.unique()
 
-        # a list of names of national roads N1 and N2, and its N-sideroads
+        # A list of names of national roads N1 and N2, and its N-sideroads
         # roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
 
         df_objects_all = []
@@ -175,11 +184,17 @@ class BangladeshModel(Model):
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
 
-        #TODO COMMENT CODE HERE
         # Define nodes and edges
         all_id_pairs_and_weights = []
+        # The nodes are a set, since there are intersections,
+        # which have the same ID
         all_nodes = set()
 
+        # For every row, add the ID to the list containing the nodes
+        # If the index is within the bound
+        # Then add the current node, next node and the length inbetween them
+        # as a tuple. Subsequently, add the tuple to the list containing
+        # all the nodes and weights.
         for index, row in df.iterrows():
             all_nodes.add(row["id"])
             if index < df.shape[0] - 1:
@@ -189,6 +204,8 @@ class BangladeshModel(Model):
                     all_id_pairs_and_weights.append(id_pair)
 
         # Build network in networkx
+        # Global G to access the graph later on
+        # for calculating the shortest path
         global G
         G = nx.Graph()
         G.add_nodes_from(all_nodes)
@@ -219,17 +236,18 @@ class BangladeshModel(Model):
         """
         return self.path_ids_dict[source, None]
 
-#TODO COMMENTING THIS PART OF CODE
+    # Get the shortest route
     def get_shortest_route(self, source):
+        # Every vehicle gets a random sink upon generation
         while True:
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
 
-        # check if route between source and sink already exists in path_id_dict
+        # Check if route between source and sink already exists in path_id_dict
         if (source, sink) not in self.path_ids_dict.keys():
-            # calculate and assign shortest path to path_id_dict as pandas series
+            # Calculate and assign shortest path to path_id_dict as pandas series
             shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
             self.path_ids_dict[source, sink] = pd.Series(shortest)
 
