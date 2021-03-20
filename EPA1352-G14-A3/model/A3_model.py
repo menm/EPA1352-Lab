@@ -8,12 +8,9 @@ import networkx as nx
 
 # ---------------------------------------------------------------
 
-
+# Calculate the driving time for
+# the batchrunner to collect
 def driving_time(model):
-    """
-    Function to collect the average driving time
-    Driving times are collected in ticks which represent minutes
-    """
     # If the list of driving times is not empty,
     # then take the driving time.
     # Otherwise this value will be 0.
@@ -72,7 +69,7 @@ class BangladeshModel(Model):
     step_time = 1
 
     #file_name = '../data/demo-4.csv'
-    file_name = '../data/roads_data_processed_1503.csv'
+    file_name = '../data/fully_cleaned_data.csv'
 
     def __init__(self, scenario = 0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -199,6 +196,7 @@ class BangladeshModel(Model):
         # Then add the current node, next node and the length inbetween them
         # as a tuple. Subsequently, add the tuple to the list containing
         # all the nodes and weights.
+        # This is done for every road.
         for index, row in df.iterrows():
             all_nodes.add(row["id"])
             if index < df.shape[0] - 1:
@@ -212,6 +210,10 @@ class BangladeshModel(Model):
         # for calculating the shortest path
         global G
         G = nx.Graph()
+        # The networkx model accesses the
+        # information from the two lists: one containing
+        # all the ids/nodes, and the other one containing all the
+        # id pairs and their weights.
         G.add_nodes_from(all_nodes)
         G.add_weighted_edges_from(all_id_pairs_and_weights)
         # print("Number of nodes in network:", G.number_of_nodes())
@@ -248,13 +250,12 @@ class BangladeshModel(Model):
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
-
         # Check if route between source and sink already exists in path_id_dict
         if (source, sink) not in self.path_ids_dict.keys():
             # Calculate and assign shortest path to path_id_dict as pandas series
             shortest = nx.shortest_path(G, source=source, target=sink, weight='weight')
             self.path_ids_dict[source, sink] = pd.Series(shortest)
-
+        # Return the dictionary
         return self.path_ids_dict[source, sink]
 
     def step(self):

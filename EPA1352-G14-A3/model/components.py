@@ -35,7 +35,6 @@ class Infra(Agent):
     def __str__(self):
         return type(self).__name__ + str(self.unique_id)
 
-
 # ---------------------------------------------------------------
 class Bridge(Infra):
     """
@@ -57,6 +56,7 @@ class Bridge(Infra):
                  name='Unknown', road_name='Unknown', condition='Unknown'):
         super().__init__(unique_id, model, length, name, road_name)
 
+        # Initialize attributes
         self.condition = condition
         self.delay_time = 0
         self.broken = False

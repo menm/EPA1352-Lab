@@ -17,12 +17,11 @@ created. In this folder, a multilevel model integration consisting of a network 
 the effects of bridges breaking down on all roads in Bangladesh > 25km. 
 This transport model runs based on a multiple files:
 
-
 ## Files 
 The overall file is called "EPA1352-G14-A3", it must contain 3 folders:
 
 The "model" folder with:
-* A3_model.py, see EPA1352-G14-A3/model/A3_model.py, which takes roads_data_processed_1503.csv as an input file that 
+* A3_model.py, see EPA1352-G14-A3/model/A3_model.py, which takes fully_cleaned_data.csv as an input file that 
   specifies the infrastructure model components to be generated. 
 * A3_model_run.py, see EPA1352-G14-A3/model/A3_model_run.py, which runs the model and the experiments.
 * components.py, see EPA1352-G14-A3/model/components.py, which defines the various infrastructure components. 
@@ -31,12 +30,12 @@ The "model" folder with:
 
 The "data" folder with:
 * A3_datacleaning.ipynb, which contains the data cleaning process and output, see EPA1352-G14-A3/data/A3_datacleaning.ipynb
-* roads_data_processed_1503.csv, which contains all roads and side roads of Bangladesh > 25km,
-  see EPA1352-G14-A3/data/roads_data_processed_1503.csv
+* fully_cleaned_data.csv, which contains all roads and side roads of Bangladesh > 25km,
+  see EPA1352-G14-A3/data/fully_cleaned_data.csv
 * A3_networkx_analysis.ipynb, which contains the analysis of the network, see EPA1352-G14-A3/data/A3_networkx_analysis.ipynb
 * A3_scenarios.csv, which contains different sets (scenario's) of probabilities that a bridge breaks down specified for 
   bridge conditions. These on their end cause delays in travel times, see EPA1352-G14-A3/data/scenarios.csv
-* A3_scenario_data.csv, which contains the results of the experiments, see EPA1352-G14-A3/data/A3_scenario_data.csv.
+* A3_scenarios_data.csv, which contains the results of the experiments, see EPA1352-G14-A3/data/A3_scenarios_data.csv.
 * A3_dataanalysis.ipynb, which contains the analysis of results of the experiments, see EPA1352-G14-A3/data/A3_dataanalysis.ipynb
 
 ## How to Use
@@ -58,6 +57,6 @@ is used to gather data. Several parameters can be adjusted before executing and 
 is used to visualize the data.
 
 
-Please Note: the input file roads_data_processed_1503.csv, was cleaned using a Jupyter notebook A3_datacleaning.ipynb
+Please Note: the input file fully_cleaned_data.csv, was cleaned using a Jupyter notebook A3_datacleaning.ipynb
 It used two input files BMMS_overview.xlsx. & _roads3.csv. These 3 files are placed in "data_cleaning" folder, under
 "EPA1352-G14-32". Make sure that BMMS is in excel format and roads in CSV format.
