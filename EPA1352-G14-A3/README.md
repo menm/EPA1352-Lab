@@ -18,7 +18,7 @@ the effects of bridges breaking down on all roads in Bangladesh > 25km.
 This transport model runs based on a multiple files:
 
 ## Files 
-The overall file is called "EPA1352-G14-A3", it must contain 3 folders:
+The overall file is called "EPA1352-G14-A3", it contain 3 important folders:
 
 The "model" folder with:
 * A3_model.py, see EPA1352-G14-A3/model/A3_model.py, which takes fully_cleaned_data.csv as an input file that 
@@ -29,7 +29,7 @@ The "model" folder with:
 * ContinuousSpace folder, see EPA1352-G14-A3/model/ContinuousSpace
 
 The "data" folder with:
-* A3_datacleaning.ipynb, which contains the data cleaning process and output, see EPA1352-G14-A3/data/A3_datacleaning.ipynb
+
 * fully_cleaned_data.csv, which contains all roads and side roads of Bangladesh > 25km,
   see EPA1352-G14-A3/data/fully_cleaned_data.csv
 * A3_networkx_analysis.ipynb, which contains the analysis of the network, see EPA1352-G14-A3/data/A3_networkx_analysis.ipynb
@@ -38,10 +38,16 @@ The "data" folder with:
 * A3_scenarios_data.csv, which contains the results of the experiments, see EPA1352-G14-A3/data/A3_scenarios_data.csv.
 * A3_dataanalysis.ipynb, which contains the analysis of results of the experiments, see EPA1352-G14-A3/data/A3_dataanalysis.ipynb
 
+The "notebooks" folder with:
+* A3_datacleaning.ipynb, which contains the data cleaning process and output, see EPA1352-G14-A3/data/A3_datacleaning.ipynb
+* A3_networkx_analysis.ipynb, which contains code for networkX generation and graphing betweenness centrality
+* A3_dataanalysis.ipynb, which contains code for graphing model output
+* these .ipynb files all require various input and give output files, which are documented in the notebooks themselves.
+
 ## How to Use
 The model can be executed by running either A3_model_run.py. For visualisation, model_viz.py should be 
-used. However, it is not recommended for the current model setting as it will take enormous computational power. 
-If the setting are edited to less model runs, model_viz.py may be run.
+used. For testing it is recommended for the current model setting to reduce number of iterations and runtime
+as it will take enormous computational power.
 
 ###A3_model_run.py 
 is used to gather data. Several parameters can be adjusted before executing and gathering results.
@@ -52,11 +58,8 @@ is used to gather data. Several parameters can be adjusted before executing and 
   overwrites the seed which is set in line 10.
 * df_batch.to_csv('../data/A3_scenario_data.csv', index=False) (line  34): saves the ouput to a csv. 
   This is used for analysing the effects of the different scenarios on travel times.
-
+Please Note: the input file for model_run.py is fully_cleaned_data.csv placed in the data folder.
+  
 ###model_viz.py
-is used to visualize the data.
-
-
-Please Note: the input file fully_cleaned_data.csv, was cleaned using a Jupyter notebook A3_datacleaning.ipynb
-It used two input files BMMS_overview.xlsx. & _roads3.csv. These 3 files are placed in "data_cleaning" folder, under
-"EPA1352-G14-32". Make sure that BMMS is in excel format and roads in CSV format.
+is used to visualize the data. 
+Please Note: With current batchrunner integration this does not run.
