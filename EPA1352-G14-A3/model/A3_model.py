@@ -8,8 +8,12 @@ import networkx as nx
 
 # ---------------------------------------------------------------
 
-# Function to collect the driving time
+
 def driving_time(model):
+    """
+    Function to collect the average driving time
+    Driving times are collected in ticks which represent minutes
+    """
     # If the list of driving times is not empty,
     # then take the driving time.
     # Otherwise this value will be 0.
