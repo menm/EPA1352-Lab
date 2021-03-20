@@ -18,7 +18,7 @@ the effects of bridges breaking down on all roads in Bangladesh > 25km.
 This transport model runs based on a multiple files:
 
 ## Files 
-The overall file is called "EPA1352-G14-A3", it contain 3 important folders:
+The overall file is called "EPA1352-G14-A3", it contains 3 important folders:
 
 The "model" folder with:
 * A3_model.py, see EPA1352-G14-A3/model/A3_model.py, which takes fully_cleaned_data.csv as an input file that 
@@ -36,13 +36,12 @@ The "data" folder with:
 * A3_scenarios.csv, which contains different sets (scenario's) of probabilities that a bridge breaks down specified for 
   bridge conditions. These on their end cause delays in travel times, see EPA1352-G14-A3/data/scenarios.csv
 * A3_scenarios_data.csv, which contains the results of the experiments, see EPA1352-G14-A3/data/A3_scenarios_data.csv.
-* A3_dataanalysis.ipynb, which contains the analysis of results of the experiments, see EPA1352-G14-A3/data/A3_dataanalysis.ipynb
 
 The "notebooks" folder with:
 * A3_datacleaning.ipynb, which contains the data cleaning process and output, see EPA1352-G14-A3/data/A3_datacleaning.ipynb
 * A3_networkx_analysis.ipynb, which contains code for networkX generation and graphing betweenness centrality
 * A3_dataanalysis.ipynb, which contains code for graphing model output
-* these .ipynb files all require various input and give output files, which are documented in the notebooks themselves.
+These .ipynb files all require various input and give output files, which are documented in the notebooks themselves.
 
 ## How to Use
 The model can be executed by running either A3_model_run.py. For visualisation, model_viz.py should be 
