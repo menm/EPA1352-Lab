@@ -29,19 +29,17 @@ The "model" folder with:
 * ContinuousSpace folder, see EPA1352-G14-A3/model/ContinuousSpace
 
 The "data" folder with:
-
 * fully_cleaned_data.csv, which contains all roads and side roads of Bangladesh > 25km,
   see EPA1352-G14-A3/data/fully_cleaned_data.csv
-* A3_networkx_analysis.ipynb, which contains the analysis of the network, see EPA1352-G14-A3/data/A3_networkx_analysis.ipynb
 * A3_scenarios.csv, which contains different sets (scenario's) of probabilities that a bridge breaks down specified for 
   bridge conditions. These on their end cause delays in travel times, see EPA1352-G14-A3/data/scenarios.csv
 * A3_scenarios_data.csv, which contains the results of the experiments, see EPA1352-G14-A3/data/A3_scenarios_data.csv.
 
 The "notebooks" folder with:
-* A3_datacleaning.ipynb, which contains the data cleaning process and output, see EPA1352-G14-A3/data/A3_datacleaning.ipynb
+* A3_datacleaning.ipynb, which contains the data cleaning process and output
 * A3_networkx_analysis.ipynb, which contains code for networkX generation and graphing betweenness centrality
 * A3_dataanalysis.ipynb, which contains code for graphing model output
-These .ipynb files all require various input and give output files, which are documented in the notebooks themselves.
+* These .ipynb files all require various input and give output files, which are documented in the notebooks themselves.
 
 ## How to Use
 The model can be executed by running either A3_model_run.py. For visualisation, model_viz.py should be 
@@ -52,9 +50,9 @@ as it will take enormous computational power.
 is used to gather data. Several parameters can be adjusted before executing and gathering results.
 * Seed (line 10): can be adjusted and used for a single run, to affect stochasticity, when doing multiple runs of the 
   same scenario.
-* num_steps (line 16): run length can be adjusted to determine how many ticks the model will take for each scenario
 * parameter_sweep (line 13): the range of seeds and selection of scenarios is set here and may be adjusted. This 
   overwrites the seed which is set in line 10.
+* num_steps (line 16): run length can be adjusted to determine how many ticks the model will take for each scenario
 * df_batch.to_csv('../data/A3_scenario_data.csv', index=False) (line  34): saves the ouput to a csv. 
   This is used for analysing the effects of the different scenarios on travel times.
 Please Note: the input file for model_run.py is fully_cleaned_data.csv placed in the data folder.
