@@ -10,10 +10,11 @@ from A3_model import BangladeshModel, driving_time
 seed = 12345670
 
 # Batch run the model, for the specified scenarios and number of iterations.
-parameter_sweep = {'seed': range(88888888, 88888890), 'scenario': range(4,5)}
+parameter_sweep = {'seed': range(88888888, 88888899), 'scenario': range(4,5)}
 
 num_iterations = 1
-num_steps = 5 * 24 * 60
+#num_steps = 5 * 24 * 60 # 5 * 24hours * 60 min
+num_steps = 200
 
 # Define the batchrunner, run the model with different parameters,
 # multiple iterations and for a specific number of steps.
@@ -31,4 +32,4 @@ df_batch = batch_run.get_model_vars_dataframe()
 print(df_batch)
 
 # Store the batchrunner to a csv
-df_batch.to_csv('../data/A3_scenario3.csv', index=False)
+#df_batch.to_csv('../data/A3_scenario3.csv', index=False)
