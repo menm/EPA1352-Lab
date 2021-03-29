@@ -106,7 +106,7 @@ class BangladeshModel(Model):
         roads = df.road.unique()
 
         # A list of names of national roads N1 and N2, and its N-sideroads
-        # roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
+        roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
 
         df_objects_all = []
         for road in roads:
