@@ -153,7 +153,7 @@ class BangladeshModel(Model):
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'SourceSink':
                     if not row['id'] in self.schedule._agents:
-                        agent = SourceSink(row['id'], self, row['length'], name, row['road'])
+                        agent = SourceSink(row['id'], self, row['length'], name, row['road'], row["traffic_density"])
                         self.sources.append(agent.unique_id)
                         self.sinks.append(agent.unique_id)
                 elif model_type == 'Bridge':

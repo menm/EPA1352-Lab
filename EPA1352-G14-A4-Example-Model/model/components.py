@@ -70,7 +70,7 @@ class Bridge(Infra):
         # Bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
-        ### ----
+        ### -----
 
     def get_delay_time(self):
         # 1 step = 1 min
@@ -139,10 +139,20 @@ class Source(Infra):
     ...
 
     """
-
+    # IMPLEMENT INIT to modify spawn frequency
     truck_counter = 0
-    generation_frequency = 5
-    vehicle_generated_flag = False
+
+
+    def __init__(self, unique_id, model, length=0, name='Unknown', road_name='Unknown', freq=5):
+        self.generation_frequency = int(freq/1000)
+        self.unique_id = unique_id
+        self.model = model
+        self.length = length
+        self.name = name
+        self.road_name = road_name
+        self.vehicle_generated_flag = False
+        self.vehicle_count = 0
+    # ------
 
     def step(self):
         if self.model.schedule.steps % self.generation_frequency == 0:
