@@ -3,6 +3,10 @@ from enum import Enum
 
 
 # ---------------------------------------------------------------
+#TODO based on the sources and sinks selected, you can determine how many vehicles took this particular path
+# and then track their average delay. this will lead to a meaningful comparison of travel times between roads,
+# across scenarios and seeds
+
 class Infra(Agent):
     """
     Base class for all infrastructure components
@@ -260,7 +264,7 @@ class Vehicle(Agent):
                " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
                str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
 
-    # TODO Why a random path?
+
     def set_path(self):
         """
         Set the origin destination path of the vehicle

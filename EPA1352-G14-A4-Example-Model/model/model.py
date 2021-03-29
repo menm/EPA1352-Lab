@@ -80,12 +80,8 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
 
         # a list of names of roads to be generated
-        # TODO You can also read in the road column to generate this list automatically
-        # roads = ['N1', 'N2']
-
-        # A list of names of national roads N1 and N2, and its N-sideroads
-        roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
-        # roads = df['road'].unique()
+        # roads = ["N1", "N2", "N102", "N104", "N105", "N204", "N207", "N208"]
+        roads = df['road'].unique()
 
         df_objects_all = []
         for road in roads:
