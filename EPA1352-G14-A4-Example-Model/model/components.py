@@ -146,7 +146,6 @@ class Source(Infra):
     # IMPLEMENT INIT to modify spawn frequency
     truck_counter = 0
 
-
     def __init__(self, unique_id, model, length=0, name='Unknown', road_name='Unknown', freq=5):
         self.generation_frequency = int(freq/1000)
         self.unique_id = unique_id
@@ -158,6 +157,7 @@ class Source(Infra):
         self.vehicle_count = 0
     # ------
 
+    #TODO implement spawning distribution as opposed to regular spawning
     def step(self):
         if self.model.schedule.steps % self.generation_frequency == 0:
             self.generate_truck()
