@@ -56,7 +56,7 @@ class BangladeshModel(Model):
     step_time = 1
 
     # file_name = '../data/demo-4.csv'
-    file_name = '../notebook/fully_cleaned_data.csv'
+    file_name = '../notebook/NEW_trafficinputdata_cleaned.csv'
 
     def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -152,9 +152,10 @@ class BangladeshModel(Model):
                     agent = Sink(row['id'], self, row['length'], name, row['road'])
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'SourceSink':
-                    agent = SourceSink(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
-                    self.sinks.append(agent.unique_id)
+                    if not row['id'] in self.schedule._agents:
+                        agent = SourceSink(row['id'], self, row['length'], name, row['road'])
+                        self.sources.append(agent.unique_id)
+                        self.sinks.append(agent.unique_id)
                 elif model_type == 'Bridge':
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
                 elif model_type == 'Link':
