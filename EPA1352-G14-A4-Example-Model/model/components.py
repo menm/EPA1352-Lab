@@ -58,6 +58,20 @@ class Bridge(Infra):
         self.delay_time = 0
         self.broken = False
 
+        ### manual breakdown probability
+        if self.condition == "D":
+            probability_of_breaking = 10
+        elif self.condition == "C":
+            probability_of_breaking = 5
+        elif self.condition == "B":
+            probability_of_breaking = 3
+        else: #self.condition == "A"
+            probability_of_breaking = 1
+        # Bridge breaks down with pre-defined probability
+        if self.random.random() * 100 < probability_of_breaking:
+           self.broken= True
+        ### ----
+
     def get_delay_time(self):
         # 1 step = 1 min
         if self.broken:
