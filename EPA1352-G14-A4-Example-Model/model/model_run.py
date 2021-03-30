@@ -10,14 +10,14 @@ import pandas as pd
 # ---------------------------------------------------------------
 
 # main parameters
-run_length = 50
+run_length = 100
 seed = 1234567
 
 # read in scenarios with breakdown probabilities for bridges
 scenarios_df = pd.read_csv("../model/A4_scenarios.csv")
 scenarios_list = scenarios_df.values.tolist()
 
-print(scenarios_list)
+# run model for each scenario
 for scenario in scenarios_list:
     bdp = scenario[1:]
     sim_model = BangladeshModel(seed=seed, bdp=bdp)
@@ -39,4 +39,4 @@ for scenario in scenarios_list:
             results = results.append(new_row, ignore_index=True)
 
     print(results)
-    results.to_csv("../data/A4_results_"+str(scenario[0])+"_"+str(seed)+".csv", index=False)
+    results.to_csv("../results/A4_results_"+str(scenario[0])+"_"+str(seed)+".csv", index=False)

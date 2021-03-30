@@ -1,11 +1,7 @@
 from mesa import Agent
 from enum import Enum
 
-
 # ---------------------------------------------------------------
-#TODO based on the sources and sinks selected, you can determine how many vehicles took this particular path
-# and then track their average delay. this will lead to a meaningful comparison of travel times between roads,
-# across scenarios and seeds
 
 class Infra(Agent):
     """
@@ -23,8 +19,7 @@ class Infra(Agent):
 
     """
 
-    def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown'):
+    def __init__(self, unique_id, model, length=0, name='Unknown', road_name='Unknown'):
         super().__init__(unique_id, model)
         self.length = length
         self.name = name
@@ -36,7 +31,6 @@ class Infra(Agent):
 
     def __str__(self):
         return type(self).__name__ + str(self.unique_id)
-
 
 # ---------------------------------------------------------------
 class Bridge(Infra):
@@ -66,7 +60,6 @@ class Bridge(Infra):
         self.x = x
         self.y = y
 
-        ### manual breakdown probability
         if self.condition == "D":
             probability_of_breaking = bdp[3]
         elif self.condition == "C":
@@ -78,7 +71,7 @@ class Bridge(Infra):
         # Bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
-        ### -----
+
 
     def get_delay_time(self):
         # 1 step = 1 min
@@ -93,11 +86,10 @@ class Bridge(Infra):
                 self.delay_time = self.random.uniform(10, 20)
         else:
             self.delay_time = 0
+
         self.vehicles += 1
         self.cumulative_delay += self.delay_time
-        print("Bridge:", self.unique_id, "delay:", self.cumulative_delay)
         return self.delay_time
-
 
 # ---------------------------------------------------------------
 class Link(Infra):
