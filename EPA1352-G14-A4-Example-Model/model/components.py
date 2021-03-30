@@ -55,22 +55,26 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown'):
+                 name='Unknown', road_name='Unknown', condition='Unknown', x=0, y=0):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
         self.delay_time = 0
         self.broken = False
+        self.cumulative_delay = 0
+        self.vehicles = 0
+        self.x = x
+        self.y = y
 
         ### manual breakdown probability
         if self.condition == "D":
-            probability_of_breaking = 10
+            probability_of_breaking = 50
         elif self.condition == "C":
-            probability_of_breaking = 5
+            probability_of_breaking = 30
         elif self.condition == "B":
-            probability_of_breaking = 3
+            probability_of_breaking = 20
         else: #self.condition == "A"
-            probability_of_breaking = 1
+            probability_of_breaking = 10
         # Bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
@@ -89,6 +93,9 @@ class Bridge(Infra):
                 self.delay_time = self.random.uniform(10, 20)
         else:
             self.delay_time = 0
+        self.vehicles += 1
+        self.cumulative_delay += self.delay_time
+        print("Bridge:", self.unique_id, "delay:", self.cumulative_delay)
         return self.delay_time
 
 
@@ -157,7 +164,6 @@ class Source(Infra):
         self.vehicle_count = 0
     # ------
 
-    #TODO implement spawning distribution as opposed to regular spawning
     def step(self):
         if self.model.schedule.steps % self.generation_frequency == 0:
             self.generate_truck()
