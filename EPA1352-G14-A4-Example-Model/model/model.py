@@ -58,7 +58,7 @@ class BangladeshModel(Model):
     # file_name = '../data/demo-4.csv'
     file_name = '../notebook/NEW_trafficinputdata_cleaned.csv'
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
+    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0, bdp=[0,0,0,0]):
 
         self.schedule = BaseScheduler(self)
         self.running = True
@@ -67,6 +67,7 @@ class BangladeshModel(Model):
         self.sources = []
         self.sinks = []
         self.G = nx.Graph()
+        self.bdp = bdp
 
         self.generate_model()
 
@@ -153,7 +154,8 @@ class BangladeshModel(Model):
                         self.sources.append(agent.unique_id)
                         self.sinks.append(agent.unique_id)
                 elif model_type == 'Bridge':
-                    agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'], row["lon"], row["lat"])
+                    agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'],
+                                   row["lon"], row["lat"], self.bdp)
                 elif model_type == 'Link':
                     agent = Link(row['id'], self, row['length'], name, row['road'])
                 elif model_type == 'Intersection':

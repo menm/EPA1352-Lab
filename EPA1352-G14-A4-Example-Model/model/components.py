@@ -55,7 +55,7 @@ class Bridge(Infra):
     """
 
     def __init__(self, unique_id, model, length=0,
-                 name='Unknown', road_name='Unknown', condition='Unknown', x=0, y=0):
+                 name='Unknown', road_name='Unknown', condition='Unknown', x=0, y=0, bdp=[0,0,0,0]):
         super().__init__(unique_id, model, length, name, road_name)
 
         self.condition = condition
@@ -68,13 +68,13 @@ class Bridge(Infra):
 
         ### manual breakdown probability
         if self.condition == "D":
-            probability_of_breaking = 50
+            probability_of_breaking = bdp[3]
         elif self.condition == "C":
-            probability_of_breaking = 30
+            probability_of_breaking = bdp[2]
         elif self.condition == "B":
-            probability_of_breaking = 20
+            probability_of_breaking = bdp[1]
         else: #self.condition == "A"
-            probability_of_breaking = 10
+            probability_of_breaking = bdp[0]
         # Bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
