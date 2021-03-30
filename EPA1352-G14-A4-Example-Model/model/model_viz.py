@@ -8,7 +8,6 @@ Run simulation with Visualization
 Print output at terminal
 """
 
-
 # ---------------------------------------------------------------
 def agent_portrayal(agent):
     """
@@ -62,6 +61,7 @@ def agent_portrayal(agent):
     return portrayal
 
 # ---------------------------------------------------------------
+
 """
 Launch the animation server 
 Open a browser tab 
@@ -80,3 +80,5 @@ server = ModularServer(BangladeshModel,
 # The default port
 server.port = 8521
 server.launch()
+
+# EOF -----------------------------------------------------------

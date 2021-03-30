@@ -2,7 +2,6 @@ from mesa import Agent
 from enum import Enum
 
 # ---------------------------------------------------------------
-
 class Infra(Agent):
     """
     Base class for all infrastructure components
@@ -55,6 +54,8 @@ class Bridge(Infra):
         self.condition = condition
         self.delay_time = 0
         self.broken = False
+
+        # NEW data collection attributes
         self.cumulative_delay = 0
         self.vehicles = 0
         self.x = x
@@ -87,6 +88,7 @@ class Bridge(Infra):
         else:
             self.delay_time = 0
 
+        # update data collection attributes
         self.vehicles += 1
         self.cumulative_delay += self.delay_time
         return self.delay_time

@@ -7,6 +7,7 @@ from collections import defaultdict
 import networkx as nx
 
 # ---------------------------------------------------------------
+
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     """
     Set the HTML continuous space canvas bounding box (for visualization)
@@ -23,7 +24,6 @@ def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
     x_min = lon_min - lon_edge
     y_min = lat_max + lat_edge
     return y_min, y_max, x_min, x_max
-
 
 # ---------------------------------------------------------------
 class BangladeshModel(Model):
