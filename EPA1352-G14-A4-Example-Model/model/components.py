@@ -148,7 +148,7 @@ class Source(Infra):
     truck_counter = 0
 
     def __init__(self, unique_id, model, length=0, name='Unknown', road_name='Unknown', freq=5):
-        self.generation_frequency = int((7200/freq)*10)
+        self.generation_frequency = int((7200/freq)*3)
         self.unique_id = unique_id
         self.model = model
         self.length = length
