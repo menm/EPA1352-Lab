@@ -11,7 +11,7 @@ import pandas as pd
 
 # main parameters
 run_length = 24*60*5
-seed = 7777777
+seed = 12121212
 
 # read in scenarios with breakdown probabilities for bridges
 scenarios_df = pd.read_csv("../model/A4_scenarios.csv")
