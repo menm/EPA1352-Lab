@@ -14,7 +14,7 @@ run_length = 24*60*5
 seed = 12121212
 
 # read in scenarios with breakdown probabilities for bridges
-scenarios_df = pd.read_csv("../model/A4_scenarios.csv")
+scenarios_df = pd.read_csv("../data/A4_scenarios.csv")
 scenarios_list = scenarios_df.values.tolist()
 
 # run model for each scenario
