@@ -55,12 +55,17 @@ class Bridge(Infra):
         self.delay_time = 0
         self.broken = False
 
-        # NEW data collection attributes
+        # new data collection attributes; let bridges
+        # calculate the cumulative delay of the vehicles
+        # waiting and also how many vehicles are waiting at the
+        # bridge, so the average delay can be calculated
         self.cumulative_delay = 0
         self.vehicles = 0
         self.x = x
         self.y = y
 
+        # Define when breakdown probability based
+        # on their condition
         if self.condition == "D":
             probability_of_breaking = bdp[3]
         elif self.condition == "C":
@@ -69,6 +74,7 @@ class Bridge(Infra):
             probability_of_breaking = bdp[1]
         else: #self.condition == "A"
             probability_of_breaking = bdp[0]
+
         # Bridge breaks down with pre-defined probability
         if self.random.random() * 100 < probability_of_breaking:
            self.broken= True
@@ -144,10 +150,10 @@ class Source(Infra):
     ...
 
     """
-    # IMPLEMENT INIT to modify spawn frequency
     truck_counter = 0
 
     def __init__(self, unique_id, model, length=0, name='Unknown', road_name='Unknown', freq=5):
+        # the generation frequency is the spawn frequency of vehicles by the sourcesinks
         self.generation_frequency = int((7200/freq)*3)
         self.unique_id = unique_id
         self.model = model
@@ -263,7 +269,6 @@ class Vehicle(Agent):
                " +" + str(self.generated_at_step) + " -" + str(self.removed_at_step) + \
                " " + str(self.state) + '(' + str(self.waiting_time) + ') ' + \
                str(self.location) + '(' + str(self.location.vehicle_count) + ') ' + str(self.location_offset)
-
 
     def set_path(self):
         """

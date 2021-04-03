@@ -1,5 +1,5 @@
-from model import BangladeshModel
-from components import *
+from A4_model import BangladeshModel
+from A4_components import *
 import pandas as pd
 
 """

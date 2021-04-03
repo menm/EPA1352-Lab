@@ -1,10 +1,11 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
-from components import Source, Sink, SourceSink, Bridge, Link, Intersection
+from A4_components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
 import networkx as nx
+import numpy as np
 
 # ---------------------------------------------------------------
 
@@ -62,10 +63,13 @@ class BangladeshModel(Model):
         self.schedule = BaseScheduler(self)
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
+
         self.space = None
         self.sources = []
         self.sinks = []
         self.G = nx.Graph()
+        # Define the breakdown probability as a model variable
+        # to store the breakdown probability of the bridges
         self.bdp = bdp
 
         self.generate_model()
@@ -85,6 +89,7 @@ class BangladeshModel(Model):
 
         df_objects_all = []
         for road in roads:
+            neighbor_list = []
             # Select all the objects on a particular road in the original order as in the cvs
             df_objects_on_road = df[df['road'] == road]
 
@@ -113,6 +118,7 @@ class BangladeshModel(Model):
                 path_G = nx.path_graph(path_ids)
                 self.G.add_nodes_from(path_G)
                 self.G.add_edges_from(path_G.edges)
+
 
         # put back to df with selected roads so that min and max and be easily calculated
         df = pd.concat(df_objects_all)
@@ -148,11 +154,17 @@ class BangladeshModel(Model):
                     agent = Sink(row['id'], self, row['length'], name, row['road'])
                     self.sinks.append(agent.unique_id)
                 elif model_type == 'SourceSink':
+                    # Since the mesa model needs unique IDs
+                    # and intersecting points have the same ID,
+                    # it prevents it from being initialized twice
                     if not row['id'] in self.schedule._agents:
+                        # also add the traffic density as an attribute for sourcesinks
                         agent = SourceSink(row['id'], self, row['length'], name, row['road'], row["traffic_density"])
                         self.sources.append(agent.unique_id)
                         self.sinks.append(agent.unique_id)
                 elif model_type == 'Bridge':
+                    # also add latitude, longitude and breakdown probability for the experiments and visualization
+                    # as attributes for bridges
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'],
                                    row["lon"], row["lat"], self.bdp)
                 elif model_type == 'Link':
@@ -167,6 +179,7 @@ class BangladeshModel(Model):
                     x = row['lon']
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
+
 
     def get_straight_route(self, source):
         return self.get_route(source, None)
@@ -184,9 +197,11 @@ class BangladeshModel(Model):
 
     def get_route(self, source, sink):
         if (source, sink) in self.path_ids_dict:
+            print(source,sink)
             return self.path_ids_dict[source, sink]
         else:
             path_ids = pd.Series(nx.shortest_path(self.G, source, sink))
+            print(path_ids)
             self.path_ids_dict[source, sink] = path_ids
             return path_ids
 

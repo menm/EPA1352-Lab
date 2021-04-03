@@ -1,7 +1,7 @@
 from mesa.visualization.ModularVisualization import ModularServer
 from ContinuousSpace.SimpleContinuousModule import SimpleCanvas
-from model import BangladeshModel
-from components import Source, Sink, Bridge, Link, Intersection, Infra
+from A4_model import BangladeshModel
+from A4_components import Source, Sink, Bridge, Link, Intersection, Infra
 
 """
 Run simulation with Visualization 
@@ -72,6 +72,7 @@ canvas_height = 400
 
 space = SimpleCanvas(agent_portrayal, canvas_width, canvas_height)
 
+# The visualization has a particular breakdown probability for the bridges
 server = ModularServer(BangladeshModel,
                        [space],
                        "Transport Model Demo",
