@@ -1,4 +1,4 @@
-# Vulnerability and criticality of the Bangladeshi road network (NetworkX and MESA)
+# Criticality and Vulnerability of the Bangladeshi Road Network (NetworkX and MESA)
 
 Created by: EPA1352 Group 14
 
@@ -26,13 +26,6 @@ The "model" folder with:
 * A4_model_viz.py, see EPA1352-G14-A4/model/A4_model_viz.py, which runs the model with visualization.
 * ContinuousSpace folder, see EPA1352-G14-A4/model/ContinuousSpace
 
-The "notebook" folder with:
-* fully_cleaned_data.csv, which contains all roads and side roads of Bangladesh > 25km,
-  see EPA1352-G14-A3/data/fully_cleaned_data.csv
-* A3_scenarios.csv, which contains different sets (scenario's) of probabilities that a bridge breaks down specified for 
-  bridge conditions. These on their end cause delays in travel times, see EPA1352-G14-A3/data/scenarios.csv
-* A3_scenarios_data.csv, which contains the results of the experiments, see EPA1352-G14-A3/data/A3_scenarios_data.csv.
-
 The "data" folder with:
 * NEW_trafficinputdata_cleaned.csv, which contains all national roads and side roads of Bangladesh > 25km, and their
   corresponding traffic densities, see EPA1352-G14-A4/data/NEW_trafficinputdata_cleaned.csv
@@ -41,11 +34,11 @@ The "data" folder with:
 
 The "notebooks" folder with:
 * A4_datacleaning.ipynb, which contains the data cleaning process and output, in this notebook the traffic densities for
-  the road segments were calculated
-* !!!
-* These .ipynb files all require various input and give output files, which are documented in the notebooks themselves.
-
-The "results" folder with: the results of the experiment. There are 25 files in total, five for each scenario, each of 
+  the road segments were calculated (code isn't perfect, some manual changes had to be made)
+* A4_networkx_analysis.ipynb, which contains code to calculate betweenness centrality for intersections in the road network
+* A4_data_analysis.ipynb, which contains code to generate figures for mapping criticality and bridge condition
+* A4_data_analysis_2.iypnb, which contains code to generate graphs and figures for vulnerability
+The "results" folder with: the results of each experiment. There are 25 files in total, five for each scenario, each of 
 which have been run for five seeds. The results are saved as: A4_results_"experimentnumber"_"seed". 
 
 ## How to Use
@@ -58,7 +51,7 @@ is used to gather data. Several parameters can be adjusted before executing and 
   same scenario.
 * Scenarios to run (line 17): the A4_scenario.csv contains the breakdown probabilities of various scenarios
 * for scenario in scenarios_list (line 21): run the experiments
-* results.to_csv("../results/A4_results_"+str(scenario[0])+"_"+str(seed)+".csv", index=False) (line 44): saves the ouput to a csv. 
+* results.to_csv("../results/A4_results_"+str(scenario)+"_"+str(seed)+".csv", index=False) (line 44): saves the ouput to a csv. 
   This is used for analysing the effects of the different scenarios on travel times.
 Please Note: the input file for model_run.py is fully_cleaned_data.csv placed in the data folder.
   
