@@ -33,8 +33,11 @@ The "data" folder with:
   bridge conditions. These on their end cause delays in travel times, see EPA1352-G14-A4/data/A4_scenarios.csv
 
 The "notebooks" folder with:
-* A4_datacleaning.ipynb, which contains the data cleaning process and output, in this notebook the traffic densities for
-  the road segments were calculated (code isn't perfect, some manual changes had to be made)
+* A4_datacleaning_traffic.ipynb, which contains the data cleaning process fro RMMS files, 
+  in this notebook the traffic densities for the road segments were calculated 
+  (code isn't perfect, some manual changes had to be made)
+* A4_datacleaning.ipynb, which contains the data cleaning process for the BMMS and roads files to find intersections
+  (code isn't perfect, some manual changes had to be made)
 * A4_networkx_analysis.ipynb, which contains code to calculate betweenness centrality for intersections in the road network
 * A4_data_analysis.ipynb, which contains code to generate figures for mapping criticality and bridge condition
 * A4_data_analysis_2.iypnb, which contains code to generate graphs and figures for vulnerability
@@ -53,7 +56,7 @@ is used to gather data. Several parameters can be adjusted before executing and 
 * for scenario in scenarios_list (line 21): run the experiments
 * results.to_csv("../results/A4_results_"+str(scenario)+"_"+str(seed)+".csv", index=False) (line 44): saves the ouput to a csv. 
   This is used for analysing the effects of the different scenarios on travel times.
-Please Note: the input file for model_run.py is fully_cleaned_data.csv placed in the data folder.
+Please Note: the input file for A4_model_run.py is fully_cleaned_data.csv placed in the data folder.
   
 ###A4_model_viz.py
 is used to visualize the data. The visualization is currently based on a particular probability of the bridges breaking
