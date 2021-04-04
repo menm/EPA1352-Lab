@@ -197,11 +197,9 @@ class BangladeshModel(Model):
 
     def get_route(self, source, sink):
         if (source, sink) in self.path_ids_dict:
-            print(source,sink)
             return self.path_ids_dict[source, sink]
         else:
             path_ids = pd.Series(nx.shortest_path(self.G, source, sink))
-            print(path_ids)
             self.path_ids_dict[source, sink] = path_ids
             return path_ids
 
